@@ -4,7 +4,7 @@ import { ROLE_LABELS, type UserRole } from '@sasana/shared-constants';
 import { LogOutIcon, WarehouseIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { CurrentUserProvider } from '@/features/auth/current-user';
 import { navForRole } from '@/features/auth/navigation';
@@ -56,11 +56,17 @@ function Sidebar({ role }: { role: UserRole }) {
         Sasana Warehouse
       </div>
       <nav className="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-1 md:flex-col md:overflow-visible">
-        {items.map(({ href, label, icon: Icon }) => {
+        {items.map(({ href, label, icon: Icon, group }, i) => {
           const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const showGroup = group && group !== items[i - 1]?.group;
           return (
+            <Fragment key={href}>
+              {showGroup ? (
+                <div className="hidden px-3 pt-4 pb-1 text-xs font-medium text-muted-foreground uppercase md:block">
+                  {group}
+                </div>
+              ) : null}
             <Link
-              key={href}
               href={href}
               className={cn(
                 'flex items-center gap-2 rounded-md px-3 py-2 text-sm whitespace-nowrap transition-colors',
@@ -72,6 +78,7 @@ function Sidebar({ role }: { role: UserRole }) {
               <Icon className="size-4" />
               {label}
             </Link>
+            </Fragment>
           );
         })}
       </nav>

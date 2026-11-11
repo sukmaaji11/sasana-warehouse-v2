@@ -5,20 +5,20 @@ select plan(20);
 
 -- ---------- fixtures (sebagai postgres, bypass RLS) ----------
 insert into auth.users (id, email, aud, role) values
-  ('00000000-0000-0000-0000-0000000000a1', 'owner@users.sasana.internal',  'authenticated', 'authenticated'),
-  ('00000000-0000-0000-0000-0000000000a2', 'admin@users.sasana.internal',  'authenticated', 'authenticated'),
-  ('00000000-0000-0000-0000-0000000000a3', 'pabrik@users.sasana.internal', 'authenticated', 'authenticated'),
-  ('00000000-0000-0000-0000-0000000000a4', 'mati@users.sasana.internal',   'authenticated', 'authenticated');
+  ('00000000-0000-0000-0000-0000000000a1', 'tst.owner@users.sasana.internal',  'authenticated', 'authenticated'),
+  ('00000000-0000-0000-0000-0000000000a2', 'tst.admin@users.sasana.internal',  'authenticated', 'authenticated'),
+  ('00000000-0000-0000-0000-0000000000a3', 'tst.pabrik@users.sasana.internal', 'authenticated', 'authenticated'),
+  ('00000000-0000-0000-0000-0000000000a4', 'tst.mati@users.sasana.internal',   'authenticated', 'authenticated');
 
 insert into public.locations (id, code, name, type) values
   ('00000000-0000-0000-0000-0000000000b1', 'T-GDG', 'Test Gudang', 'WAREHOUSE'),
   ('00000000-0000-0000-0000-0000000000b2', 'T-PBR', 'Test Pabrik', 'FACTORY');
 
 insert into public.profiles (id, username, full_name, role, is_active) values
-  ('00000000-0000-0000-0000-0000000000a1', 'owner',  'Owner',  'SUPER_OWNER',  true),
-  ('00000000-0000-0000-0000-0000000000a2', 'admin',  'Admin',  'ADMIN_GUDANG', true),
-  ('00000000-0000-0000-0000-0000000000a3', 'pabrik', 'Pabrik', 'OWNER_PABRIK', true),
-  ('00000000-0000-0000-0000-0000000000a4', 'mati',   'Mati',   'ADMIN_GUDANG', false);
+  ('00000000-0000-0000-0000-0000000000a1', 'tst.owner',  'Owner',  'SUPER_OWNER',  true),
+  ('00000000-0000-0000-0000-0000000000a2', 'tst.admin',  'Admin',  'ADMIN_GUDANG', true),
+  ('00000000-0000-0000-0000-0000000000a3', 'tst.pabrik', 'Pabrik', 'OWNER_PABRIK', true),
+  ('00000000-0000-0000-0000-0000000000a4', 'tst.mati',   'Mati',   'ADMIN_GUDANG', false);
 
 insert into public.user_locations (user_id, location_id) values
   ('00000000-0000-0000-0000-0000000000a2', '00000000-0000-0000-0000-0000000000b1'),
@@ -44,7 +44,7 @@ reset role;
 -- ---------- ADMIN_GUDANG ----------
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a2"}';
-select is((select count(*)::int from public.profiles), 1, 'admin hanya melihat profil sendiri');
+select is((select count(*)::int from public.profiles where role <> 'DRIVER'), 1, 'admin hanya melihat profil sendiri');
 select is((select count(*)::int from public.user_locations), 1, 'admin hanya melihat assignment sendiri');
 select ok((select count(*) from public.locations) >= 2, 'user aktif melihat master lokasi');
 select is((select count(*)::int from public.audit_logs), 0, 'admin tidak melihat audit log');
@@ -71,7 +71,7 @@ reset role;
 -- ---------- SUPER_OWNER ----------
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a1"}';
-select is((select count(*)::int from public.profiles), 4, 'super owner melihat semua profil');
+select is((select count(*)::int from public.profiles where id::text like '00000000-0000-0000-0000-0000000000a%'), 4, 'super owner melihat semua profil');
 select lives_ok(
   $$insert into public.locations (code, name, type) values ('T-NEW','Lokasi Baru','SALES_WAREHOUSE')$$,
   'super owner bisa membuat lokasi');

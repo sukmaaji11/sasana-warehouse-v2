@@ -27,13 +27,21 @@ export function toAppError(error: unknown): AppError {
   const e = (error ?? {}) as ErrorLike;
   const message = e.message ?? '';
 
-  const prefix = message.split(':')[0]?.trim() ?? '';
-  if (isErrorCode(prefix)) return new AppError(prefix, ERROR_MESSAGES[prefix], error);
+  const [prefix = '', ...rest] = message.split(':');
+  const code = prefix.trim();
+  if (isErrorCode(code)) {
+    // 'VALIDATION: nama wajib diisi' → tampilkan detail dari server bila ada.
+    const detail = rest.join(':').trim();
+    const msg = code === 'VALIDATION' && detail ? capitalize(detail) : ERROR_MESSAGES[code];
+    return new AppError(code, msg, error);
+  }
 
   if (e.code === 'invalid_credentials' || /invalid login credentials/i.test(message)) {
     return new AppError('INVALID_CREDENTIALS', undefined, error);
   }
   if (e.code === '42501') return new AppError('FORBIDDEN', undefined, error);
+  if (e.code === '23505') return new AppError('DUPLICATE', undefined, error);
+  if (e.code === '23514' || e.code === '22P02') return new AppError('VALIDATION', undefined, error);
   if (
     e.name === 'AuthRetryableFetchError' ||
     e.name === 'TypeError' ||
@@ -42,4 +50,8 @@ export function toAppError(error: unknown): AppError {
     return new AppError('NETWORK', undefined, error);
   }
   return new AppError('UNKNOWN', undefined, error);
+}
+
+function capitalize(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }

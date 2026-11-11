@@ -491,6 +491,14 @@ Diurutkan dari yang paling berdampak ke stok. Tiap pertanyaan menyebut phase yan
 | Hosting | Tetap Supabase (bukan VPS); web di Cloudflare karena Vercel Hobby non-komersial | Supabase Free + Cloudflare Pages/Workers (Next.js via OpenNext). Biaya Rp 0/bulan. Akses `auth.uid()` dibungkus helper agar tetap portable ke Postgres VPS jika kelak pindah. Upgrade ke Pro saat DB mendekati 500 MB atau butuh PITR/staging |
 | Q18 | Supabase Free dulu | Mitigasi R1: GitHub Actions terjadwal (1) `pg_dump` harian disimpan sebagai artifact/private storage, (2) query ringan berkala agar project tidak di-pause. Dibuat di Phase 1 |
 
+| Q6 | Packaging diterima dari vendor, admin input per sachet saja | Item PACKAGING hanya punya satuan dasar (sachet/botol/karton); tidak ada konversi untuk inbound |
+| Q14 | Buyer disimpan di database agar tidak duplikat | Tabel `buyers`, nama unik (tidak case-sensitive). Dikelola SO, Admin Gudang, Owner Pabrik **[USULAN: sama dengan vendor]** |
+| Q15 | Vendor dikelola Super Owner, Owner Pabrik, Admin Gudang | Tabel `vendors`, nama unik; RLS insert/update untuk ketiga role; tanpa hapus (nonaktifkan) |
+| Q19 | Daftar produk dari `seed.js` sistem lama | Migration `20261112000200_master_data_initial.sql`: 15 packaging, 15 produk jadi, mapping 1:1, konversi renteng/dus. User & stok dummy dari seed lama **tidak** diambil |
+| Q20 | Distribusi utama dari Gudang Penjualan | Lokasi `GPJ-KMB` Gudang Penjualan Kembaran (SALES_WAREHOUSE) |
+| Q21 | Distribusi di Gudang Penjualan diinput Admin Gudang | ADMIN_GUDANG boleh input distribusi di lokasi yang di-assign (Phase 6). Buyer dikelola SO/AG/OP: dikonfirmasi |
+| Q8 | Produksi tidak boleh lintas pabrik | Master "produk per pabrik" (Phase 2b): produksi ditolak jika produk tidak terdaftar di pabrik tersebut. Diketahui: Cilacap → Monster Pro; Kemranjen → Herbal SN 35/100, Dragon SN, Bima Power. Produk lain menunggu konfirmasi |
+
 **Asumsi yang saya pakai sampai Anda koreksi:**
 - **Q5:** qty selalu bilangan bulat dalam base unit.
 - **Q17:** tidak ada migrasi data lama. Sistem mulai dari stok awal hasil cek fisik (Q1), tanpa riwayat lama.

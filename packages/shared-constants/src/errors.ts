@@ -12,6 +12,14 @@ export const ERROR_MESSAGES = {
   INSUFFICIENT_STOCK: 'Stok tidak mencukupi.',
   INVALID_STATUS: 'Status transaksi sudah berubah. Muat ulang data.',
   NETWORK: 'Tidak ada koneksi internet. Transaksi belum dikirim.',
+  VALIDATION: 'Data tidak valid. Periksa kembali isian Anda.',
+  NOT_FOUND: 'Data tidak ditemukan.',
+  DUPLICATE: 'Data dengan nama atau kode yang sama sudah ada.',
+  USERNAME_TAKEN: 'Username sudah dipakai.',
+  SELF_LOCKOUT: 'Anda tidak bisa menurunkan role atau menonaktifkan akun sendiri.',
+  BASE_UNIT_LOCKED: 'Satuan dasar tidak bisa diubah dari sini.',
+  ITEM_TYPE_LOCKED: 'Tipe barang tidak bisa diubah karena sudah dipakai di mapping packaging.',
+  INVALID_ITEM_TYPE: 'Tipe barang tidak sesuai (produk jadi ↔ packaging).',
   UNKNOWN: 'Terjadi kesalahan. Coba lagi.',
 } as const;
 

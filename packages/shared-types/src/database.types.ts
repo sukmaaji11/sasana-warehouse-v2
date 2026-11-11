@@ -19,6 +19,60 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"buyers": {
+                  Row: {
+                    "address": string | null,"created_at": string,"created_by": string | null,"id": string,"is_active": boolean,"name": string,"notes": string | null,"phone": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"is_active"?: boolean,"name": string,"notes"?: string | null,"phone"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"is_active"?: boolean,"name"?: string,"notes"?: string | null,"phone"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "buyers_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"item_units": {
+                  Row: {
+                    "created_at": string,"factor": number,"id": string,"is_active": boolean,"is_base": boolean,"item_id": string,"unit_name": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"factor": number,"id"?: string,"is_active"?: boolean,"is_base"?: boolean,"item_id": string,"unit_name": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"factor"?: number,"id"?: string,"is_active"?: boolean,"is_base"?: boolean,"item_id"?: string,"unit_name"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "item_units_item_id_fkey"
+      columns: ["item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"items": {
+                  Row: {
+                    "base_unit": string,"created_at": string,"id": string,"is_active": boolean,"min_stock": number,"name": string,"sku": string,"type": Database["public"]['Enums']["item_type"],"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "base_unit": string,"created_at"?: string,"id"?: string,"is_active"?: boolean,"min_stock"?: number,"name": string,"sku": string,"type": Database["public"]['Enums']["item_type"],"updated_at"?: string
+                  }
+                  Update: {
+                    "base_unit"?: string,"created_at"?: string,"id"?: string,"is_active"?: boolean,"min_stock"?: number,"name"?: string,"sku"?: string,"type"?: Database["public"]['Enums']["item_type"],"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"locations": {
                   Row: {
                     "address": string | null,"code": string,"created_at": string,"deleted_at": string | null,"id": string,"is_active": boolean,"is_inbound_hub": boolean,"name": string,"type": Database["public"]['Enums']["location_type"],"updated_at": string
@@ -32,6 +86,38 @@ export type Database = {
                   }
                   Relationships: [
                     
+                  ]
+                },"product_packagings": {
+                  Row: {
+                    "finished_item_id": string,"packaging_item_id": string,"updated_at": string,"updated_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "finished_item_id": string,"packaging_item_id": string,"updated_at"?: string,"updated_by"?: string | null
+                  }
+                  Update: {
+                    "finished_item_id"?: string,"packaging_item_id"?: string,"updated_at"?: string,"updated_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "product_packagings_finished_item_id_fkey"
+      columns: ["finished_item_id"]
+isOneToOne: true
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_packagings_packaging_item_id_fkey"
+      columns: ["packaging_item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "product_packagings_updated_by_fkey"
+      columns: ["updated_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"profiles": {
                   Row: {
@@ -79,18 +165,41 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"vendors": {
+                  Row: {
+                    "address": string | null,"created_at": string,"created_by": string | null,"id": string,"is_active": boolean,"name": string,"notes": string | null,"phone": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"is_active"?: boolean,"name": string,"notes"?: string | null,"phone"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "address"?: string | null,"created_at"?: string,"created_by"?: string | null,"id"?: string,"is_active"?: boolean,"name"?: string,"notes"?: string | null,"phone"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "vendors_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 }
           }
           Views: {
             [_ in never]: never
           }
           Functions: {
-            "get_my_context":
+            "admin_update_user":
+{ Args: { "p_full_name": string,"p_is_active": boolean,"p_location_ids": (string)[],"p_role": Database["public"]['Enums']["user_role"],"p_user_id": string }; Returns: undefined
+                           },
+"get_my_context":
 { Args: Record<PropertyKey, never>; Returns: Json
                            }
           }
           Enums: {
-            "location_type": "WAREHOUSE"|"FACTORY"|"SALES_WAREHOUSE","user_role": "SUPER_OWNER"|"ADMIN_GUDANG"|"OWNER_PABRIK"|"DRIVER"
+            "item_type": "PACKAGING"|"FINISHED_GOOD","location_type": "WAREHOUSE"|"FACTORY"|"SALES_WAREHOUSE","user_role": "SUPER_OWNER"|"ADMIN_GUDANG"|"OWNER_PABRIK"|"DRIVER"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -206,7 +315,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "location_type": ["WAREHOUSE", "FACTORY", "SALES_WAREHOUSE"],"user_role": ["SUPER_OWNER", "ADMIN_GUDANG", "OWNER_PABRIK", "DRIVER"]
+            "item_type": ["PACKAGING", "FINISHED_GOOD"],"location_type": ["WAREHOUSE", "FACTORY", "SALES_WAREHOUSE"],"user_role": ["SUPER_OWNER", "ADMIN_GUDANG", "OWNER_PABRIK", "DRIVER"]
           }
         }
 } as const
