@@ -1,0 +1,57 @@
+# Backup harian database Supabase (Decision Log Q18: Supabase Free tidak punya backup harian).
+# Query harian ini juga menjaga project tetap aktif (Free tier di-pause setelah ±7 hari tanpa aktivitas).
+#
+# GitHub Secrets yang dibutuhkan (Settings → Secrets and variables → Actions):
+#   SUPABASE_DB_URL        Connection string "Session pooler" (IPv4) dari Supabase → Connect.
+#                          Contoh: postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres
+#   BACKUP_PASSPHRASE      Passphrase panjang untuk enkripsi file backup. Simpan juga di password manager.
+#
+# Restore: unduh artifact → gpg -d file.gpg > file.sql → ikuti docs/runbooks/restore-backup.md
+name: Database backup
+
+on:
+  schedule:
+    - cron: '0 19 * * *' # 02:00 WIB setiap hari
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Dump roles, schema, data
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          set -euo pipefail
+          mkdir -p backup
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/schema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/data.sql --use-copy --data-only
+          ls -la backup
+
+      - name: Encrypt
+        env:
+          BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          stamp=$(TZ=Asia/Jakarta date +%Y%m%d-%H%M)
+          tar -czf "sasana-db-$stamp.tar.gz" -C backup .
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$BACKUP_PASSPHRASE" \
+              --symmetric --cipher-algo AES256 -o "sasana-db-$stamp.tar.gz.gpg" "sasana-db-$stamp.tar.gz"
+          rm -rf backup "sasana-db-$stamp.tar.gz"
+          echo "STAMP=$stamp" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sasana-db-${{ env.STAMP }}
+          path: sasana-db-*.tar.gz.gpg
+          retention-days: 30
+          if-no-files-found: error
