@@ -497,7 +497,9 @@ Diurutkan dari yang paling berdampak ke stok. Tiap pertanyaan menyebut phase yan
 | Q19 | Daftar produk dari `seed.js` sistem lama | Migration `20261112000200_master_data_initial.sql`: 15 packaging, 15 produk jadi, mapping 1:1, konversi renteng/dus. User & stok dummy dari seed lama **tidak** diambil |
 | Q20 | Distribusi utama dari Gudang Penjualan | Lokasi `GPJ-KMB` Gudang Penjualan Kembaran (SALES_WAREHOUSE) |
 | Q21 | Distribusi di Gudang Penjualan diinput Admin Gudang | ADMIN_GUDANG boleh input distribusi di lokasi yang di-assign (Phase 6). Buyer dikelola SO/AG/OP: dikonfirmasi |
-| Q8 | Produksi tidak boleh lintas pabrik | Master "produk per pabrik" (Phase 2b): produksi ditolak jika produk tidak terdaftar di pabrik tersebut. Diketahui: Cilacap → Monster Pro; Kemranjen → Herbal SN 35/100, Dragon SN, Bima Power. Produk lain menunggu konfirmasi |
+| Q8 | Produksi tidak boleh lintas pabrik. Kemranjen: Herbal SN 35/100, Dragon SN, Bima Power, Dopping Dewa, Dragon Merpati; lainnya Cilacap; bisa diubah | Tabel `product_locations` (migration `20261112000300`), diatur Super Owner di halaman detail produk. Dipakai validasi produksi (Phase 5) |
+| Q9 | Minimum stok fleksibel, default 100 sachet | Default `items.min_stock` = 100 (satuan dasar), dapat diubah per barang. Status "Menipis" bila stok < minimum |
+| Q16 | Tanggal transaksi boleh mundur maksimal 1 minggu | `app.assert_transaction_date`: maksimal 7 hari ke belakang, tidak boleh masa depan (WIB). Berlaku untuk inbound, stok awal/penyesuaian, dan transaksi berikutnya |
 
 **Asumsi yang saya pakai sampai Anda koreksi:**
 - **Q5:** qty selalu bilangan bulat dalam base unit.

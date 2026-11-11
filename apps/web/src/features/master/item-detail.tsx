@@ -31,6 +31,7 @@ import { useCurrentUser } from '@/features/auth/current-user';
 import { can } from '@/features/auth/permissions';
 import { getSupabase } from '@/lib/supabase/client';
 import { ItemDialog } from './item-dialog';
+import { ProductLocationsCard } from './product-locations-card';
 import { useItems, useSaveMutation } from './queries';
 
 export function ItemDetail({ id }: { id: string }) {
@@ -80,6 +81,7 @@ export function ItemDetail({ id }: { id: string }) {
       </Card>
 
       {item.type === 'FINISHED_GOOD' ? <PackagingCard item={item} items={data} editable={editable} /> : null}
+      {item.type === 'FINISHED_GOOD' ? <ProductLocationsCard item={item} editable={editable} /> : null}
 
       <Card>
         <CardHeader className="flex flex-row items-start justify-between gap-4">

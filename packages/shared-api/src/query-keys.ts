@@ -6,4 +6,12 @@ export const queryKeys = {
   vendors: ['master', 'vendors'] as const,
   buyers: ['master', 'buyers'] as const,
   users: ['master', 'users'] as const,
+  productLocations: ['master', 'product-locations'] as const,
+  stockLevels: ['stock', 'levels'] as const,
+  movements: (filter: object) => ['stock', 'movements', filter] as const,
+  movementsAll: ['stock', 'movements'] as const,
+  inbounds: ['inbound', 'list'] as const,
+  inbound: (id: string) => ['inbound', 'detail', id] as const,
+  adjustments: ['adjustment', 'list'] as const,
+  adjustment: (id: string) => ['adjustment', 'detail', id] as const,
 } as const;

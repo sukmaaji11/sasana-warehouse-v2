@@ -1,6 +1,9 @@
 import type { UserRole } from '@sasana/shared-constants';
 import {
   BoxesIcon,
+  ClipboardCheckIcon,
+  PackageIcon,
+  PackagePlusIcon,
   HandshakeIcon,
   LayoutDashboardIcon,
   MapPinIcon,
@@ -28,6 +31,9 @@ const SO = ['SUPER_OWNER'] as const;
  */
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboardIcon, roles: WEB_ROLES },
+  { href: '/stock', label: 'Stok', icon: PackageIcon, roles: WEB_ROLES, group: 'Operasional' },
+  { href: '/inbound', label: 'Inbound', icon: PackagePlusIcon, roles: ['SUPER_OWNER', 'ADMIN_GUDANG'], group: 'Operasional' },
+  { href: '/stock/adjustments', label: 'Stok awal & penyesuaian', icon: ClipboardCheckIcon, roles: WEB_ROLES, group: 'Operasional' },
   { href: '/master/items', label: 'Barang', icon: BoxesIcon, roles: WEB_ROLES, group: 'Master data' },
   { href: '/master/vendors', label: 'Vendor', icon: TruckIcon, roles: WEB_ROLES, group: 'Master data' },
   { href: '/master/buyers', label: 'Buyer', icon: HandshakeIcon, roles: WEB_ROLES, group: 'Master data' },

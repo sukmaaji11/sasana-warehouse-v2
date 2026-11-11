@@ -57,7 +57,11 @@ function Sidebar({ role }: { role: UserRole }) {
       </div>
       <nav className="flex gap-1 overflow-x-auto px-2 pb-2 md:flex-1 md:flex-col md:overflow-visible">
         {items.map(({ href, label, icon: Icon, group }, i) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const active =
+            href === '/'
+              ? pathname === '/'
+              : (pathname === href || pathname.startsWith(`${href}/`)) &&
+                !items.some((o) => o.href !== href && o.href.startsWith(href) && pathname.startsWith(o.href));
           const showGroup = group && group !== items[i - 1]?.group;
           return (
             <Fragment key={href}>

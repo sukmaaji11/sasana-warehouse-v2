@@ -15,4 +15,4 @@ export const ITEM_TYPE_LABELS: Record<ItemType, string> = {
   FINISHED_GOOD: 'Produk Jadi',
 };
 
-export const DEFAULT_MIN_STOCK = 50;
+export const DEFAULT_MIN_STOCK = 100;

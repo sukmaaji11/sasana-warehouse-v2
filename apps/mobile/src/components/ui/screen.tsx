@@ -14,9 +14,9 @@ interface ScreenProps {
 export function Screen({ title, subtitle, children, scroll = true }: ScreenProps) {
   const body = (
     <View style={styles.content}>
-      {title ? (
+      {title || subtitle ? (
         <View style={styles.header}>
-          <Text style={styles.title}>{title}</Text>
+          {title ? <Text style={styles.title}>{title}</Text> : null}
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
         </View>
       ) : null}

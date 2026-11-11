@@ -3,3 +3,4 @@ export * from './errors';
 export * from './auth';
 export * from './query-keys';
 export * from './master';
+export * from './stock';

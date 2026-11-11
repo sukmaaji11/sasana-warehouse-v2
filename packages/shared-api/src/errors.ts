@@ -1,5 +1,8 @@
 import { ERROR_MESSAGES, isErrorCode, type ErrorCode } from '@sasana/shared-constants';
 
+/** Kode error yang detail dari server-nya lebih berguna daripada pesan umum. */
+const DETAIL_CODES = new Set<ErrorCode>(['VALIDATION', 'INSUFFICIENT_STOCK', 'NOT_FOUND', 'INVALID_ITEM_TYPE']);
+
 export class AppError extends Error {
   constructor(
     public readonly code: ErrorCode,
@@ -32,7 +35,7 @@ export function toAppError(error: unknown): AppError {
   if (isErrorCode(code)) {
     // 'VALIDATION: nama wajib diisi' → tampilkan detail dari server bila ada.
     const detail = rest.join(':').trim();
-    const msg = code === 'VALIDATION' && detail ? capitalize(detail) : ERROR_MESSAGES[code];
+    const msg = DETAIL_CODES.has(code) && detail ? capitalize(detail) : ERROR_MESSAGES[code];
     return new AppError(code, msg, error);
   }
 

@@ -20,6 +20,7 @@ export const ERROR_MESSAGES = {
   BASE_UNIT_LOCKED: 'Satuan dasar tidak bisa diubah dari sini.',
   ITEM_TYPE_LOCKED: 'Tipe barang tidak bisa diubah karena sudah dipakai di mapping packaging.',
   INVALID_ITEM_TYPE: 'Tipe barang tidak sesuai (produk jadi ↔ packaging).',
+  IDEMPOTENCY_CONFLICT: 'Transaksi ini sudah pernah dikirim. Muat ulang halaman.',
   UNKNOWN: 'Terjadi kesalahan. Coba lagi.',
 } as const;
 

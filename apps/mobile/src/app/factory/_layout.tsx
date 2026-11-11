@@ -5,6 +5,7 @@ export default function Layout() {
     <RoleTabs
       tabs={[
         { name: 'index', title: 'Beranda', icon: 'factory' },
+        { name: 'stock', title: 'Stok', icon: 'package-variant-closed' },
         { name: 'profile', title: 'Profil', icon: 'account-circle' },
       ]}
     />

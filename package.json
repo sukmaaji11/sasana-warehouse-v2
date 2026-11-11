@@ -2,13 +2,15 @@
   "name": "sasana-warehouse",
   "private": true,
   "packageManager": "pnpm@10.34.9",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "web": "pnpm --filter @sasana/web dev",
     "mobile": "pnpm --filter @sasana/mobile start",
-    "typecheck": "pnpm -r --parallel typecheck",
-    "lint": "pnpm -r --parallel lint",
-    "test": "pnpm -r test",
+    "typecheck": "pnpm -r --filter=!sasana-warehouse --parallel typecheck",
+    "lint": "pnpm -r --filter=!sasana-warehouse --parallel lint",
+    "test": "pnpm -r --filter=!sasana-warehouse test",
     "db:start": "supabase start",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
