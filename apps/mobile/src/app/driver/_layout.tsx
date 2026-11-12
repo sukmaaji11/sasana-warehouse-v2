@@ -4,7 +4,8 @@ export default function Layout() {
   return (
     <RoleTabs
       tabs={[
-        { name: 'index', title: 'Tugas', icon: 'truck-delivery' },
+        { name: 'tasks', title: 'Tugas', icon: 'truck-delivery' },
+        { name: 'history', title: 'Riwayat', icon: 'history' },
         { name: 'profile', title: 'Profil', icon: 'account-circle' },
       ]}
     />

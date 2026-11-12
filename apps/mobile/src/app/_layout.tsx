@@ -2,7 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ConnectionBanner } from '@/components/connection-banner';
@@ -37,9 +37,15 @@ export default function RootLayout() {
 function RootNavigator() {
   const { session } = useSession();
   const ctx = useMyContext(Boolean(session));
+  const userId = session?.user.id ?? null;
+
+  // Splash hanya sampai konteks user PERTAMA kali selesai dimuat (sukses/gagal).
+  // Refetch berikutnya tidak boleh membongkar navigator (mencegah layar putih/loop).
+  const [resolvedFor, setResolvedFor] = useState<string | null>(null);
+  if (userId && (ctx.isSuccess || ctx.isError) && resolvedFor !== userId) setResolvedFor(userId);
 
   const loadingSession = session === undefined;
-  const loadingContext = Boolean(session) && ctx.isPending && ctx.fetchStatus !== 'idle';
+  const loadingContext = userId !== null && resolvedFor !== userId;
   const ready = !loadingSession && !loadingContext;
 
   useEffect(() => {

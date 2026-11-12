@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect, type Href } from 'expo-router';
 import { ROLE_HOME } from '@/features/auth/routes';
 import { useMyContext } from '@/features/auth/use-my-context';
 
@@ -6,5 +6,5 @@ import { useMyContext } from '@/features/auth/use-my-context';
 export default function Index() {
   const { data } = useMyContext();
   if (!data) return null;
-  return <Redirect href={ROLE_HOME[data.role]} />;
+  return <Redirect href={ROLE_HOME[data.role] as Href} />;
 }

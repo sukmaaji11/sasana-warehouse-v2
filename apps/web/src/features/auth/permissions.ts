@@ -9,6 +9,7 @@ export const can = {
   manageUsers: (r: UserRole) => r === 'SUPER_OWNER',
   viewStock: (r: UserRole) => r === 'SUPER_OWNER' || r === 'ADMIN_GUDANG' || r === 'OWNER_PABRIK',
   inbound: (r: UserRole) => r === 'SUPER_OWNER' || r === 'ADMIN_GUDANG',
+  shipments: (r: UserRole) => r === 'SUPER_OWNER' || r === 'ADMIN_GUDANG' || r === 'OWNER_PABRIK',
   adjustStock: (r: UserRole) => r === 'SUPER_OWNER',
   manageParties: (r: UserRole) => r === 'SUPER_OWNER' || r === 'ADMIN_GUDANG' || r === 'OWNER_PABRIK', // Q14, Q15
 };

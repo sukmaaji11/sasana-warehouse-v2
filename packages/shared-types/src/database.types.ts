@@ -249,6 +249,100 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"shipment_items": {
+                  Row: {
+                    "base_qty": number | null,"factor": number,"id": string,"input_qty": number,"item_id": string,"shipment_id": string,"unit_id": string,"unit_name": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "base_qty"?: never,"factor": number,"id"?: string,"input_qty": number,"item_id": string,"shipment_id": string,"unit_id": string,"unit_name": string
+                  }
+                  Update: {
+                    "base_qty"?: never,"factor"?: number,"id"?: string,"input_qty"?: number,"item_id"?: string,"shipment_id"?: string,"unit_id"?: string,"unit_name"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "shipment_items_item_id_fkey"
+      columns: ["item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipment_items_shipment_id_fkey"
+      columns: ["shipment_id"]
+isOneToOne: false
+      referencedRelation: "shipments"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipment_items_unit_id_fkey"
+      columns: ["unit_id"]
+isOneToOne: false
+      referencedRelation: "item_units"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"shipments": {
+                  Row: {
+                    "assigned_at": string | null,"assigned_by": string | null,"cancel_reason": string | null,"cancelled_at": string | null,"cancelled_by": string | null,"created_at": string,"created_by": string,"doc_no": string,"driver_id": string | null,"from_location_id": string,"id": string,"idempotency_key": string,"notes": string | null,"picked_up_at": string | null,"picked_up_by": string | null,"picked_up_on_behalf": boolean,"received_at": string | null,"received_by": string | null,"status": Database["public"]['Enums']["shipment_status"],"to_location_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "assigned_at"?: string | null,"assigned_by"?: string | null,"cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"created_at"?: string,"created_by": string,"doc_no": string,"driver_id"?: string | null,"from_location_id": string,"id"?: string,"idempotency_key": string,"notes"?: string | null,"picked_up_at"?: string | null,"picked_up_by"?: string | null,"picked_up_on_behalf"?: boolean,"received_at"?: string | null,"received_by"?: string | null,"status"?: Database["public"]['Enums']["shipment_status"],"to_location_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "assigned_at"?: string | null,"assigned_by"?: string | null,"cancel_reason"?: string | null,"cancelled_at"?: string | null,"cancelled_by"?: string | null,"created_at"?: string,"created_by"?: string,"doc_no"?: string,"driver_id"?: string | null,"from_location_id"?: string,"id"?: string,"idempotency_key"?: string,"notes"?: string | null,"picked_up_at"?: string | null,"picked_up_by"?: string | null,"picked_up_on_behalf"?: boolean,"received_at"?: string | null,"received_by"?: string | null,"status"?: Database["public"]['Enums']["shipment_status"],"to_location_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "shipments_assigned_by_fkey"
+      columns: ["assigned_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_cancelled_by_fkey"
+      columns: ["cancelled_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_driver_id_fkey"
+      columns: ["driver_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_from_location_id_fkey"
+      columns: ["from_location_id"]
+isOneToOne: false
+      referencedRelation: "locations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_picked_up_by_fkey"
+      columns: ["picked_up_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_received_by_fkey"
+      columns: ["received_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shipments_to_location_id_fkey"
+      columns: ["to_location_id"]
+isOneToOne: false
+      referencedRelation: "locations"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"stock_adjustment_items": {
                   Row: {
                     "adjustment_id": string,"delta": number | null,"id": string,"item_id": string,"physical_qty": number,"system_qty": number
@@ -458,8 +552,17 @@ isOneToOne: false
             "admin_update_user":
 { Args: { "p_full_name": string,"p_is_active": boolean,"p_location_ids": (string)[],"p_role": Database["public"]['Enums']["user_role"],"p_user_id": string }; Returns: undefined
                            },
+"assign_shipment_driver":
+{ Args: { "p_driver_id": string,"p_shipment_id": string }; Returns: Json
+                           },
+"cancel_shipment":
+{ Args: { "p_reason": string,"p_shipment_id": string }; Returns: Json
+                           },
 "create_inbound":
 { Args: { "p_idempotency_key": string,"p_items": Json,"p_notes": string,"p_transaction_date": string,"p_vendor_id": string }; Returns: Json
+                           },
+"create_shipment":
+{ Args: { "p_driver_id": string,"p_from_location_id": string,"p_idempotency_key": string,"p_items": Json,"p_notes": string,"p_to_location_id": string }; Returns: Json
                            },
 "create_stock_adjustment":
 { Args: { "p_adjustment_date": string,"p_idempotency_key": string,"p_items": Json,"p_kind": string,"p_location_id": string,"p_reason": string }; Returns: Json
@@ -467,12 +570,18 @@ isOneToOne: false
 "get_my_context":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
+"pickup_shipment":
+{ Args: { "p_shipment_id": string }; Returns: Json
+                           },
+"receive_shipment":
+{ Args: { "p_shipment_id": string }; Returns: Json
+                           },
 "void_transaction":
 { Args: { "p_reason": string,"p_ref_id": string,"p_ref_type": string }; Returns: Json
                            }
           }
           Enums: {
-            "item_type": "PACKAGING"|"FINISHED_GOOD","location_type": "WAREHOUSE"|"FACTORY"|"SALES_WAREHOUSE","movement_type": "INBOUND"|"SHIPMENT_PICKUP"|"SHIPMENT_RECEIVE"|"SHIPMENT_RETURN"|"PRODUCTION_CONSUME"|"PRODUCTION_RESULT"|"DISTRIBUTION"|"OPENING_BALANCE"|"ADJUSTMENT_IN"|"ADJUSTMENT_OUT"|"VOID_REVERSAL","user_role": "SUPER_OWNER"|"ADMIN_GUDANG"|"OWNER_PABRIK"|"DRIVER"
+            "item_type": "PACKAGING"|"FINISHED_GOOD","location_type": "WAREHOUSE"|"FACTORY"|"SALES_WAREHOUSE","movement_type": "INBOUND"|"SHIPMENT_PICKUP"|"SHIPMENT_RECEIVE"|"SHIPMENT_RETURN"|"PRODUCTION_CONSUME"|"PRODUCTION_RESULT"|"DISTRIBUTION"|"OPENING_BALANCE"|"ADJUSTMENT_IN"|"ADJUSTMENT_OUT"|"VOID_REVERSAL","shipment_status": "CREATED"|"ASSIGNED"|"PICKED_UP"|"RECEIVED"|"CANCELLED","user_role": "SUPER_OWNER"|"ADMIN_GUDANG"|"OWNER_PABRIK"|"DRIVER"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -588,7 +697,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "item_type": ["PACKAGING", "FINISHED_GOOD"],"location_type": ["WAREHOUSE", "FACTORY", "SALES_WAREHOUSE"],"movement_type": ["INBOUND", "SHIPMENT_PICKUP", "SHIPMENT_RECEIVE", "SHIPMENT_RETURN", "PRODUCTION_CONSUME", "PRODUCTION_RESULT", "DISTRIBUTION", "OPENING_BALANCE", "ADJUSTMENT_IN", "ADJUSTMENT_OUT", "VOID_REVERSAL"],"user_role": ["SUPER_OWNER", "ADMIN_GUDANG", "OWNER_PABRIK", "DRIVER"]
+            "item_type": ["PACKAGING", "FINISHED_GOOD"],"location_type": ["WAREHOUSE", "FACTORY", "SALES_WAREHOUSE"],"movement_type": ["INBOUND", "SHIPMENT_PICKUP", "SHIPMENT_RECEIVE", "SHIPMENT_RETURN", "PRODUCTION_CONSUME", "PRODUCTION_RESULT", "DISTRIBUTION", "OPENING_BALANCE", "ADJUSTMENT_IN", "ADJUSTMENT_OUT", "VOID_REVERSAL"],"shipment_status": ["CREATED", "ASSIGNED", "PICKED_UP", "RECEIVED", "CANCELLED"],"user_role": ["SUPER_OWNER", "ADMIN_GUDANG", "OWNER_PABRIK", "DRIVER"]
           }
         }
 } as const

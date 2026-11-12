@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES, isErrorCode, type ErrorCode } from '@sasana/shared-constants';
 
 /** Kode error yang detail dari server-nya lebih berguna daripada pesan umum. */
-const DETAIL_CODES = new Set<ErrorCode>(['VALIDATION', 'INSUFFICIENT_STOCK', 'NOT_FOUND', 'INVALID_ITEM_TYPE']);
+const DETAIL_CODES = new Set<ErrorCode>(['VALIDATION', 'INSUFFICIENT_STOCK', 'NOT_FOUND', 'INVALID_ITEM_TYPE', 'INVALID_STATUS', 'FORBIDDEN']);
 
 export class AppError extends Error {
   constructor(
