@@ -86,7 +86,7 @@ function RootNavigator() {
       <Stack.Protected guard={role === 'ADMIN_GUDANG'}>
         <Stack.Screen name="warehouse" />
       </Stack.Protected>
-      <Stack.Protected guard={role === 'OWNER_PABRIK'}>
+      <Stack.Protected guard={role === 'OWNER_PABRIK' || role === 'ADMIN_PABRIK'}>
         <Stack.Screen name="factory" />
       </Stack.Protected>
       <Stack.Protected guard={role === 'SUPER_OWNER'}>

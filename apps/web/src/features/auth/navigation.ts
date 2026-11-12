@@ -2,6 +2,7 @@ import type { UserRole } from '@sasana/shared-constants';
 import {
   BoxesIcon,
   ClipboardCheckIcon,
+  FactoryIcon,
   PackageIcon,
   PackagePlusIcon,
   RouteIcon,
@@ -23,7 +24,8 @@ export interface NavItem {
   group?: string;
 }
 
-const WEB_ROLES = ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK'] as const;
+const WEB_ROLES = ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK', 'ADMIN_PABRIK'] as const;
+const PARTY_ROLES = ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK'] as const;
 const SO = ['SUPER_OWNER'] as const;
 
 /**
@@ -35,10 +37,11 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/stock', label: 'Stok', icon: PackageIcon, roles: WEB_ROLES, group: 'Operasional' },
   { href: '/inbound', label: 'Inbound', icon: PackagePlusIcon, roles: ['SUPER_OWNER', 'ADMIN_GUDANG'], group: 'Operasional' },
   { href: '/shipments', label: 'Shipment', icon: RouteIcon, roles: WEB_ROLES, group: 'Operasional' },
+  { href: '/production', label: 'Produksi', icon: FactoryIcon, roles: ['SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_PABRIK'], group: 'Operasional' },
   { href: '/stock/adjustments', label: 'Stok awal & penyesuaian', icon: ClipboardCheckIcon, roles: WEB_ROLES, group: 'Operasional' },
   { href: '/master/items', label: 'Barang', icon: BoxesIcon, roles: WEB_ROLES, group: 'Master data' },
-  { href: '/master/vendors', label: 'Vendor', icon: TruckIcon, roles: WEB_ROLES, group: 'Master data' },
-  { href: '/master/buyers', label: 'Buyer', icon: HandshakeIcon, roles: WEB_ROLES, group: 'Master data' },
+  { href: '/master/vendors', label: 'Vendor', icon: TruckIcon, roles: PARTY_ROLES, group: 'Master data' },
+  { href: '/master/buyers', label: 'Buyer', icon: HandshakeIcon, roles: PARTY_ROLES, group: 'Master data' },
   { href: '/master/locations', label: 'Lokasi', icon: MapPinIcon, roles: SO, group: 'Master data' },
   { href: '/users', label: 'User', icon: UsersIcon, roles: SO, group: 'Pengaturan' },
   { href: '/profile', label: 'Profil', icon: UserIcon, roles: WEB_ROLES, group: 'Pengaturan' },

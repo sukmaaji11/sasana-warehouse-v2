@@ -3,7 +3,25 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 
 export type Database = {
   
-  "public": {
+  "graphql_public": {
+          Tables: {
+            [_ in never]: never
+          }
+          Views: {
+            [_ in never]: never
+          }
+          Functions: {
+            "graphql":
+{ Args: { "extensions"?: Json,"operationName"?: string,"query"?: string,"variables"?: Json }; Returns: Json
+                           }
+          }
+          Enums: {
+            [_ in never]: never
+          }
+          CompositeTypes: {
+            [_ in never]: never
+          }
+        },"public": {
           Tables: {
             "audit_logs": {
                   Row: {
@@ -230,6 +248,56 @@ isOneToOne: false
     },{
       foreignKeyName: "product_packagings_updated_by_fkey"
       columns: ["updated_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"productions": {
+                  Row: {
+                    "created_at": string,"created_by": string,"doc_no": string,"factor": number,"finished_item_id": string,"id": string,"idempotency_key": string,"input_qty_good": number,"location_id": string,"notes": string | null,"packaging_consumed": number | null,"packaging_item_id": string,"production_date": string,"qty_good": number | null,"qty_reject": number,"unit_id": string,"unit_name": string,"void_reason": string | null,"voided_at": string | null,"voided_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by": string,"doc_no": string,"factor": number,"finished_item_id": string,"id"?: string,"idempotency_key": string,"input_qty_good": number,"location_id": string,"notes"?: string | null,"packaging_consumed"?: never,"packaging_item_id": string,"production_date": string,"qty_good"?: never,"qty_reject": number,"unit_id": string,"unit_name": string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string,"doc_no"?: string,"factor"?: number,"finished_item_id"?: string,"id"?: string,"idempotency_key"?: string,"input_qty_good"?: number,"location_id"?: string,"notes"?: string | null,"packaging_consumed"?: never,"packaging_item_id"?: string,"production_date"?: string,"qty_good"?: never,"qty_reject"?: number,"unit_id"?: string,"unit_name"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "productions_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "productions_finished_item_id_fkey"
+      columns: ["finished_item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "productions_location_id_fkey"
+      columns: ["location_id"]
+isOneToOne: false
+      referencedRelation: "locations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "productions_packaging_item_id_fkey"
+      columns: ["packaging_item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "productions_unit_id_fkey"
+      columns: ["unit_id"]
+isOneToOne: false
+      referencedRelation: "item_units"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "productions_voided_by_fkey"
+      columns: ["voided_by"]
 isOneToOne: false
       referencedRelation: "profiles"
       referencedColumns: ["id"]
@@ -561,6 +629,9 @@ isOneToOne: false
 "create_inbound":
 { Args: { "p_idempotency_key": string,"p_items": Json,"p_notes": string,"p_transaction_date": string,"p_vendor_id": string }; Returns: Json
                            },
+"create_production":
+{ Args: { "p_finished_item_id": string,"p_idempotency_key": string,"p_location_id": string,"p_notes": string,"p_production_date": string,"p_qty_good": number,"p_qty_reject": number,"p_unit_id": string }; Returns: Json
+                           },
 "create_shipment":
 { Args: { "p_driver_id": string,"p_from_location_id": string,"p_idempotency_key": string,"p_items": Json,"p_notes": string,"p_to_location_id": string }; Returns: Json
                            },
@@ -581,7 +652,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "item_type": "PACKAGING"|"FINISHED_GOOD","location_type": "WAREHOUSE"|"FACTORY"|"SALES_WAREHOUSE","movement_type": "INBOUND"|"SHIPMENT_PICKUP"|"SHIPMENT_RECEIVE"|"SHIPMENT_RETURN"|"PRODUCTION_CONSUME"|"PRODUCTION_RESULT"|"DISTRIBUTION"|"OPENING_BALANCE"|"ADJUSTMENT_IN"|"ADJUSTMENT_OUT"|"VOID_REVERSAL","shipment_status": "CREATED"|"ASSIGNED"|"PICKED_UP"|"RECEIVED"|"CANCELLED","user_role": "SUPER_OWNER"|"ADMIN_GUDANG"|"OWNER_PABRIK"|"DRIVER"
+            "item_type": "PACKAGING"|"FINISHED_GOOD","location_type": "WAREHOUSE"|"FACTORY"|"SALES_WAREHOUSE","movement_type": "INBOUND"|"SHIPMENT_PICKUP"|"SHIPMENT_RECEIVE"|"SHIPMENT_RETURN"|"PRODUCTION_CONSUME"|"PRODUCTION_RESULT"|"DISTRIBUTION"|"OPENING_BALANCE"|"ADJUSTMENT_IN"|"ADJUSTMENT_OUT"|"VOID_REVERSAL","shipment_status": "CREATED"|"ASSIGNED"|"PICKED_UP"|"RECEIVED"|"CANCELLED","user_role": "SUPER_OWNER"|"ADMIN_GUDANG"|"OWNER_PABRIK"|"ADMIN_PABRIK"|"DRIVER"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -695,9 +766,13 @@ export type CompositeTypes<
   : never
 
 export const Constants = {
-  "public": {
+  "graphql_public": {
           Enums: {
-            "item_type": ["PACKAGING", "FINISHED_GOOD"],"location_type": ["WAREHOUSE", "FACTORY", "SALES_WAREHOUSE"],"movement_type": ["INBOUND", "SHIPMENT_PICKUP", "SHIPMENT_RECEIVE", "SHIPMENT_RETURN", "PRODUCTION_CONSUME", "PRODUCTION_RESULT", "DISTRIBUTION", "OPENING_BALANCE", "ADJUSTMENT_IN", "ADJUSTMENT_OUT", "VOID_REVERSAL"],"shipment_status": ["CREATED", "ASSIGNED", "PICKED_UP", "RECEIVED", "CANCELLED"],"user_role": ["SUPER_OWNER", "ADMIN_GUDANG", "OWNER_PABRIK", "DRIVER"]
+            
+          }
+        },"public": {
+          Enums: {
+            "item_type": ["PACKAGING", "FINISHED_GOOD"],"location_type": ["WAREHOUSE", "FACTORY", "SALES_WAREHOUSE"],"movement_type": ["INBOUND", "SHIPMENT_PICKUP", "SHIPMENT_RECEIVE", "SHIPMENT_RETURN", "PRODUCTION_CONSUME", "PRODUCTION_RESULT", "DISTRIBUTION", "OPENING_BALANCE", "ADJUSTMENT_IN", "ADJUSTMENT_OUT", "VOID_REVERSAL"],"shipment_status": ["CREATED", "ASSIGNED", "PICKED_UP", "RECEIVED", "CANCELLED"],"user_role": ["SUPER_OWNER", "ADMIN_GUDANG", "OWNER_PABRIK", "ADMIN_PABRIK", "DRIVER"]
           }
         }
 } as const

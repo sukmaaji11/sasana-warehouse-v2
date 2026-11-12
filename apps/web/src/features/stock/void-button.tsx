@@ -15,7 +15,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { getSupabase } from '@/lib/supabase/client';
 import { STOCK_INVALIDATE } from './queries';
 
-/** Void (Super Owner): membalik seluruh pergerakan stok transaksi. */
+const DETAIL_KEYS: Record<VoidableRef, (id: string) => readonly (readonly unknown[])[]> = {
+  inbound: (id) => [queryKeys.inbound(id)],
+  stock_adjustment: (id) => [queryKeys.adjustment(id)],
+  production: (id) => [queryKeys.production(id), queryKeys.productionsAll],
+};
+
+/** Void (Super Owner; produksi juga Owner Pabrik): membalik seluruh pergerakan stok transaksi. */
 export function VoidButton({ refType, refId, docNo }: { refType: VoidableRef; refId: string; docNo: string }) {
   const [open, setOpen] = useState(false);
   const qc = useQueryClient();
@@ -24,7 +30,7 @@ export function VoidButton({ refType, refId, docNo }: { refType: VoidableRef; re
     mutationFn: (v: VoidValues) => voidTransaction(getSupabase(), refType, refId, v),
     onSuccess: async () => {
       await Promise.all(
-        [...STOCK_INVALIDATE, refType === 'inbound' ? queryKeys.inbound(refId) : queryKeys.adjustment(refId)].map(
+        [...STOCK_INVALIDATE, ...DETAIL_KEYS[refType](refId)].map(
           (queryKey) => qc.invalidateQueries({ queryKey }),
         ),
       );

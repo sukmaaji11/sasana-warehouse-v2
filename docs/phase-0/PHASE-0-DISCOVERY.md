@@ -502,6 +502,9 @@ Diurutkan dari yang paling berdampak ke stok. Tiap pertanyaan menyebut phase yan
 | Q4 (final) | Shipment untuk perpindahan internal (gudang→pabrik, pabrik→Gudang Penjualan, pabrik→pabrik mis. Cilacap→Kemranjen). Barang keluar ke pihak luar lewat Distribusi oleh Owner Pabrik; driver hanya untuk internal | Shipment hanya antar lokasi internal; tujuan menambah stok saat diterima. Tidak ada tipe lokasi EXTERNAL. Pembuat: SO, Admin Gudang & Owner Pabrik di lokasi asal (migration `20261114000100`) |
 | Q12 | Driver boleh diganti; beri opsi pickup oleh admin | Driver bisa ditugaskan/diganti/dilepas selama belum pickup. Opsi "pickup atas nama driver" oleh pengelola lokasi asal, tercatat `picked_up_on_behalf` + audit |
 | Q16 | Tanggal transaksi boleh mundur maksimal 1 minggu | `app.assert_transaction_date`: maksimal 7 hari ke belakang, tidak boleh masa depan (WIB). Berlaku untuk inbound, stok awal/penyesuaian, dan transaksi berikutnya |
+| Q10 | Super Owner **tidak** boleh input produksi. Input oleh Owner Pabrik dan Admin Pabrik (role baru). Void produksi: Super Owner + Owner Pabrik | Role baru `ADMIN_PABRIK` (migration `20261115000100`): input produksi, terima shipment, lihat stok/movement/produksi di pabriknya. Tidak bisa inbound, membuat shipment, kelola vendor/buyer, atau void. `create_production` & perluasan `void_transaction` (migration `20261115000200`) |
+| Konsumsi internal | Pemakaian produk untuk rawatan ayam dicatat sebagai distribusi | Buyer khusus "Konsumsi internal – Rawatan ayam" di master buyer (Phase 6) |
+| Distribusi pabrik | Admin Pabrik **tidak** boleh input distribusi | Distribusi dari pabrik hanya oleh Owner Pabrik (Phase 6) |
 
 **Asumsi yang saya pakai sampai Anda koreksi:**
 - **Q5:** qty selalu bilangan bulat dalam base unit.

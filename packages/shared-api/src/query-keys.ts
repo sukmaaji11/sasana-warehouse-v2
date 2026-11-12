@@ -18,4 +18,7 @@ export const queryKeys = {
   shipments: (filter: object) => ['shipment', 'list', filter] as const,
   shipment: (id: string) => ['shipment', 'detail', id] as const,
   drivers: ['master', 'drivers'] as const,
+  productionsAll: ['production'] as const,
+  productions: (filter: object) => ['production', 'list', filter] as const,
+  production: (id: string) => ['production', 'detail', id] as const,
 } as const;

@@ -5,6 +5,7 @@ import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
 import { Chips } from '@/components/ui/chips';
+import { useMyContext } from '@/features/auth/use-my-context';
 import { colors, font, spacing } from '@/theme';
 import { useShipments } from './queries';
 import { ShipmentCard } from './shipment-card';
@@ -28,6 +29,9 @@ export function ShipmentListScreen({
   basePath: string;
   mode: 'manage' | 'driver-tasks' | 'driver-history';
 }) {
+  const { data: me } = useMyContext();
+  // Admin Pabrik hanya menerima shipment; pembuat = SO/AG/OP (sama dengan RPC).
+  const canCreate = me?.role === 'SUPER_OWNER' || me?.role === 'ADMIN_GUDANG' || me?.role === 'OWNER_PABRIK';
   const [filter, setFilter] = useState('active');
   const statuses =
     mode === 'driver-tasks' ? (['ASSIGNED', 'PICKED_UP'] as const) : mode === 'driver-history' ? (['RECEIVED', 'CANCELLED'] as const) : FILTERS[filter];
@@ -40,7 +44,7 @@ export function ShipmentListScreen({
         <Text style={styles.title}>{title}</Text>
         {mode === 'manage' ? (
           <>
-            <Button title="+ Shipment baru" onPress={() => router.push(`${basePath}/new` as never)} />
+            {canCreate ? <Button title="+ Shipment baru" onPress={() => router.push(`${basePath}/new` as never)} /> : null}
             <Chips
               value={filter}
               onChange={setFilter}

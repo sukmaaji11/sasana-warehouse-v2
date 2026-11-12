@@ -6,7 +6,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const AUTH_EMAIL_DOMAIN = 'users.sasana.internal';
 const USERNAME_PATTERN = /^[a-z0-9._]{3,30}$/;
-const ROLES = ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK', 'DRIVER'] as const;
+const ROLES = ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK', 'ADMIN_PABRIK', 'DRIVER'] as const;
 const UUID = /^[0-9a-f-]{36}$/i;
 
 const corsHeaders = {

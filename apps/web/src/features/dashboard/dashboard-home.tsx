@@ -8,6 +8,7 @@ const ROLE_SUMMARY: Record<UserRole, string> = {
   SUPER_OWNER: 'Ringkasan global seluruh lokasi akan tampil di sini (Phase 7).',
   ADMIN_GUDANG: 'Stok packaging, inbound, dan status shipment akan tampil di sini (Phase 3, 4, 7).',
   OWNER_PABRIK: 'Stok pabrik, produksi, dan distribusi akan tampil di sini (Phase 5, 6, 7).',
+  ADMIN_PABRIK: 'Input produksi ada di menu Produksi. Ringkasan pabrik menyusul (Phase 7).',
   DRIVER: '',
 };
 
