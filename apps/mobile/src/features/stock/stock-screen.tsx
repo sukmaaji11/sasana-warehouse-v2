@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
+import { EmptyState, InfoTip } from '@/components/ui/info-tip';
 import { Chips } from '@/components/ui/chips';
 import { useMyContext } from '@/features/auth/use-my-context';
 import { colors, font, radius, spacing, touchTarget } from '@/theme';
@@ -33,9 +34,13 @@ export function StockScreen() {
   const locations = me?.locations ?? [];
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
       <View style={styles.header}>
         <Text style={styles.title}>Stok</Text>
+        <InfoTip
+          title="Cara membaca stok"
+          summary="Jumlah barang di lokasi Anda dalam satuan sachet. Merah berarti di bawah batas minimum dan perlu segera diisi."
+        />
         {locations.length > 1 ? (
           <Chips
             accessibilityLabel="Filter lokasi"
@@ -77,7 +82,13 @@ export function StockScreen() {
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />}
           ListEmptyComponent={
-            <Text style={styles.empty}>{isPending ? 'Memuat stok…' : data?.length ? 'Tidak ada yang cocok.' : 'Belum ada stok tercatat.'}</Text>
+            isPending ? (
+              <Text style={styles.empty}>Memuat stok…</Text>
+            ) : data?.length ? (
+              <EmptyState icon="magnify" title="Tidak ada yang cocok" text="Ubah kata kunci atau filter." />
+            ) : (
+              <EmptyState icon="package-variant" title="Belum ada stok" text="Stok muncul setelah ada inbound, shipment diterima, atau produksi." />
+            )
           }
           renderItem={({ item }) => <StockRow row={item} showLocation={locationId === 'ALL' && locations.length > 1} />}
         />

@@ -8,10 +8,12 @@ interface ScreenProps {
   subtitle?: string;
   children: ReactNode;
   scroll?: boolean;
+  /** true untuk layar tanpa header (login, akun diblokir). */
+  topInset?: boolean;
 }
 
 /** Kerangka layar standar: safe area, judul, padding konsisten. */
-export function Screen({ title, subtitle, children, scroll = true }: ScreenProps) {
+export function Screen({ title, subtitle, children, scroll = true, topInset = false }: ScreenProps) {
   const body = (
     <View style={styles.content}>
       {title || subtitle ? (
@@ -24,7 +26,7 @@ export function Screen({ title, subtitle, children, scroll = true }: ScreenProps
     </View>
   );
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={topInset ? ['top', 'left', 'right'] : ['left', 'right']}>
       {scroll ? <ScrollView keyboardShouldPersistTaps="handled">{body}</ScrollView> : body}
     </SafeAreaView>
   );

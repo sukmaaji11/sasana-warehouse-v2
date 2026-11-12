@@ -1,3 +1,4 @@
+import type { SasanaClient } from './client';
 import {
   buildDistributionReport,
   buildInboundReport,
@@ -6,17 +7,18 @@ import {
   buildShipmentReport,
   buildStockReport,
   buildTraceReport,
+  type ReportDoc,
+} from './report-builders';
+import {
   fetchDistributionReport,
   fetchInboundReport,
   fetchProductionReport,
   fetchShipmentReport,
   fetchTrace,
   getStockMutation,
-  listStockLevels,
   type Period,
-  type ReportDoc,
-  type SasanaClient,
-} from '@sasana/shared-api';
+} from './reports';
+import { listStockLevels } from './stock';
 import type { LocationType, UserRole } from '@sasana/shared-constants';
 
 export interface ReportParams {
@@ -61,8 +63,8 @@ export const REPORTS: readonly ReportDef[] = [
   },
   {
     key: 'mutation',
-    label: 'Mutasi stok',
-    description: 'Saldo awal, masuk, keluar, dan saldo akhir per barang.',
+    label: 'Keluar-masuk stok',
+    description: 'Stok awal, barang masuk, keluar, dan stok akhir per barang.',
     roles: ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK', 'ADMIN_PABRIK'],
     usesPeriod: true,
     locationTypes: ALL,
@@ -70,8 +72,8 @@ export const REPORTS: readonly ReportDef[] = [
   },
   {
     key: 'inbound',
-    label: 'Inbound',
-    description: 'Packaging diterima dari vendor.',
+    label: 'Kemasan dari vendor',
+    description: 'Kemasan yang diterima dari vendor.',
     roles: ['SUPER_OWNER', 'ADMIN_GUDANG'],
     usesPeriod: true,
     locationTypes: null,
@@ -79,8 +81,8 @@ export const REPORTS: readonly ReportDef[] = [
   },
   {
     key: 'shipment',
-    label: 'Shipment',
-    description: 'Perpindahan barang antar lokasi dan statusnya.',
+    label: 'Pengiriman',
+    description: 'Pengiriman barang antar lokasi dan statusnya.',
     roles: ['SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK', 'ADMIN_PABRIK'],
     usesPeriod: true,
     locationTypes: ALL,
@@ -89,7 +91,7 @@ export const REPORTS: readonly ReportDef[] = [
   {
     key: 'production',
     label: 'Produksi & reject',
-    description: 'Good, reject, dan packaging terpakai per pabrik & produk.',
+    description: 'Hasil produksi, reject, dan kemasan terpakai per pabrik & produk.',
     roles: ['SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_PABRIK'],
     usesPeriod: true,
     locationTypes: ['FACTORY'],
@@ -98,8 +100,8 @@ export const REPORTS: readonly ReportDef[] = [
   },
   {
     key: 'distribution',
-    label: 'Distribusi per buyer',
-    description: 'Produk keluar ke buyer, termasuk konsumsi internal.',
+    label: 'Penjualan per pembeli',
+    description: 'Produk terjual ke pembeli, termasuk pemakaian sendiri.',
     roles: ['SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_GUDANG'],
     usesPeriod: true,
     locationTypes: ['FACTORY', 'SALES_WAREHOUSE'],
@@ -109,7 +111,7 @@ export const REPORTS: readonly ReportDef[] = [
   {
     key: 'trace',
     label: 'Lacak produk',
-    description: 'Jejak satu produk: diproduksi di mana, dikirim ke mana, keluar ke buyer siapa.',
+    description: 'Satu produk: dibuat di mana, dikirim ke mana, terjual ke siapa.',
     roles: ['SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_GUDANG'],
     usesPeriod: true,
     locationTypes: null,

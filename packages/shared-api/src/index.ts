@@ -10,3 +10,5 @@ export * from './production';
 export * from './distribution';
 export * from './reports';
 export * from './report-builders';
+export * from './report-definitions';
+export * from './report-html';

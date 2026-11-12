@@ -101,8 +101,8 @@ export function DistributionFormScreen({ basePath }: { basePath: string }) {
             name="buyer_id"
             render={({ field }) => (
               <PickerField
-                label="Buyer"
-                placeholder="Pilih buyer"
+                label="Pembeli"
+                placeholder="Pilih pembeli"
                 value={field.value}
                 onChange={field.onChange}
                 error={errors.buyer_id?.message}
@@ -110,7 +110,7 @@ export function DistributionFormScreen({ basePath }: { basePath: string }) {
               />
             )}
           />
-          <Text style={styles.hint}>Pemakaian sendiri (rawatan ayam): pilih “Konsumsi internal”.</Text>
+          <Text style={styles.hint}>Dipakai sendiri (rawatan ayam)? Pilih “Konsumsi internal”.</Text>
         </Card>
 
         {lines.fields.map((f, idx) => {
@@ -200,7 +200,7 @@ export function DistributionFormScreen({ basePath }: { basePath: string }) {
 
       <ConfirmSheet
         visible={confirming !== null}
-        title="Simpan distribusi?"
+        title="Simpan penjualan?"
         confirmLabel="Ya, simpan"
         pending={submit.isPending}
         error={submit.error}

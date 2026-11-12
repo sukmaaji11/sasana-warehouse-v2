@@ -30,13 +30,59 @@ export interface LowStockRow {
   base_unit: string;
 }
 
+/** Alur bisnis (satuan sachet): kemasan dibeli → ke pabrik → diproduksi → ke gudang penjualan → keluar ke buyer. */
+export interface DashboardFlow {
+  inbound: number;
+  packaging_to_factory: number;
+  produced: number;
+  rejected: number;
+  goods_to_sales: number;
+  distributed: number;
+  in_transit: number;
+}
+
+export type ActivityKind =
+  | 'INBOUND'
+  | 'PRODUCTION'
+  | 'DISTRIBUTION'
+  | 'SHIPMENT_CREATED'
+  | 'SHIPMENT_ASSIGNED'
+  | 'SHIPMENT_PICKED_UP'
+  | 'SHIPMENT_RECEIVED'
+  | 'SHIPMENT_CANCELLED';
+
+export interface ActivityRow {
+  at: string;
+  kind: ActivityKind;
+  id: string;
+  doc_no: string;
+  title: string;
+  qty: number;
+  voided: boolean;
+}
+
 export interface Dashboard {
   today: string;
   month_start: string;
   locations: DashboardLocation[];
   shipments: { created: number; assigned: number; picked_up: number; received_month: number };
+  flow: { month: DashboardFlow; today: DashboardFlow };
   low_stock: LowStockRow[];
+  top_products: { sku: string; name: string; qty: number }[];
+  activity: ActivityRow[];
 }
+
+/** Label & rute detail untuk aktivitas (dipakai web & Android). */
+export const ACTIVITY_LABELS: Record<ActivityKind, string> = {
+  INBOUND: 'Kemasan masuk dari vendor',
+  PRODUCTION: 'Produksi',
+  DISTRIBUTION: 'Distribusi ke buyer',
+  SHIPMENT_CREATED: 'Shipment dibuat',
+  SHIPMENT_ASSIGNED: 'Shipment siap pickup',
+  SHIPMENT_PICKED_UP: 'Shipment dalam perjalanan',
+  SHIPMENT_RECEIVED: 'Shipment diterima',
+  SHIPMENT_CANCELLED: 'Shipment dibatalkan',
+};
 
 export async function getDashboard(client: SasanaClient): Promise<Dashboard> {
   const { data, error } = await client.rpc('get_dashboard');

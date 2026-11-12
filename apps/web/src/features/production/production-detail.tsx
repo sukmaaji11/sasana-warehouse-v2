@@ -54,7 +54,7 @@ export function ProductionDetail({ id }: { id: string }) {
               hint={data.factor > 1 ? `${formatQty(data.input_qty_good)} ${data.unit_name}` : undefined}
             />
             <Stat label="Reject" value={`${formatQty(data.qty_reject)} ${pkgUnit}`} />
-            <Stat label="Packaging terpakai" value={`${formatQty(data.packaging_consumed ?? 0)} ${pkgUnit}`} />
+            <Stat label="Kemasan terpakai" value={`${formatQty(data.packaging_consumed ?? 0)} ${pkgUnit}`} />
           </div>
           <dl className="grid grid-cols-[9rem_1fr] gap-y-1 text-sm">
             <dt className="text-muted-foreground">Pabrik</dt>
@@ -63,7 +63,7 @@ export function ProductionDetail({ id }: { id: string }) {
             <dd>
               <span className="font-mono text-xs text-muted-foreground">{data.product?.sku}</span> {data.product?.name}
             </dd>
-            <dt className="text-muted-foreground">Packaging</dt>
+            <dt className="text-muted-foreground">Kemasan</dt>
             <dd>
               <span className="font-mono text-xs text-muted-foreground">{data.packaging?.sku}</span> {data.packaging?.name}
             </dd>

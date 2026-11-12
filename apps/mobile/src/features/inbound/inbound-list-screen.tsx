@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
+import { EmptyState, InfoTip } from '@/components/ui/info-tip';
 import { useInbounds } from '@/features/stock/queries';
 import { colors, font, radius, spacing } from '@/theme';
 
@@ -10,10 +11,15 @@ export function InboundListScreen({ basePath }: { basePath: string }) {
   const { data, error, isPending, isRefetching, refetch } = useInbounds();
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
       <View style={styles.header}>
-        <Text style={styles.title}>Inbound</Text>
-        <Button title="+ Inbound baru" onPress={() => router.push(`${basePath}/new` as never)} />
+        <Text style={styles.title}>Terima dari Vendor</Text>
+        <InfoTip
+          title="Apa yang dicatat di sini?"
+          summary="Catat kemasan yang datang dari vendor. Stok gudang kemasan langsung bertambah setelah disimpan."
+          steps={['Pilih vendor dan tanggal terima.', 'Tambah kemasan dan jumlahnya (sachet).', 'Cek ulang, lalu konfirmasi.', 'Salah input? Minta Super Owner melakukan void.']}
+        />
+        <Button title="+ Terima kemasan" onPress={() => router.push(`${basePath}/new` as never)} />
       </View>
       {error && !data ? (
         <View style={styles.header}>
@@ -26,7 +32,13 @@ export function InboundListScreen({ basePath }: { basePath: string }) {
           keyExtractor={(r) => r.id}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />}
-          ListEmptyComponent={<Text style={styles.empty}>{isPending ? 'Memuat…' : 'Belum ada inbound.'}</Text>}
+          ListEmptyComponent={
+            isPending ? (
+              <Text style={styles.empty}>Memuat…</Text>
+            ) : (
+              <EmptyState icon="package-down" title="Belum ada penerimaan" text="Tekan + Terima kemasan saat kemasan dari vendor datang." />
+            )
+          }
           renderItem={({ item }) => (
             <Pressable
               accessibilityRole="button"

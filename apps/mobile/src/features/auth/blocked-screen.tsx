@@ -13,7 +13,7 @@ export function BlockedScreen() {
   const inactive = data && !data.is_active;
 
   return (
-    <Screen title={inactive ? 'Akun nonaktif' : 'Profil belum dibuat'}>
+    <Screen topInset title={inactive ? 'Akun nonaktif' : 'Profil belum dibuat'}>
       <Card>
         <Text style={styles.text}>
           {inactive

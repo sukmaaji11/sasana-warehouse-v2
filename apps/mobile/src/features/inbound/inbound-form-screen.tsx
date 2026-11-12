@@ -51,7 +51,7 @@ export function InboundFormScreen({ basePath }: { basePath: string }) {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Screen subtitle="Packaging dari vendor → gudang pusat (input per satuan dasar)">
+      <Screen subtitle="Kemasan dari vendor → gudang kemasan (jumlah dalam sachet)">
         {loading ? <Text style={styles.muted}>Memuat data…</Text> : null}
         <Card>
           <Controller
@@ -93,7 +93,7 @@ export function InboundFormScreen({ basePath }: { basePath: string }) {
                 name={`items.${idx}.item_id`}
                 render={({ field }) => (
                   <PickerField
-                    label="Packaging"
+                    label="Kemasan"
                     placeholder="Pilih packaging"
                     value={field.value}
                     error={errors.items?.[idx]?.item_id?.message}

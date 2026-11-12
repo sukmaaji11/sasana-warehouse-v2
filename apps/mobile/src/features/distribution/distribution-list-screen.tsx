@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
+import { EmptyState, InfoTip } from '@/components/ui/info-tip';
 import { useMyContext } from '@/features/auth/use-my-context';
 import { colors, font, radius, spacing } from '@/theme';
 import { useDistributions } from './queries';
@@ -14,10 +15,19 @@ export function DistributionListScreen({ basePath }: { basePath: string }) {
   const canCreate = me ? distributionOrigins(me).length > 0 : false;
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
       <View style={styles.header}>
-        <Text style={styles.title}>Distribusi</Text>
-        {canCreate ? <Button title="+ Distribusi baru" onPress={() => router.push(`${basePath}/new` as never)} /> : null}
+        <Text style={styles.title}>Penjualan</Text>
+        <InfoTip
+          title="Apa yang dicatat di sini?"
+          summary="Semua produk yang keluar ke pembeli, termasuk yang dipakai sendiri (rawatan ayam). Stok langsung berkurang saat disimpan."
+          steps={[
+            'Pilih buyer. Untuk pemakaian sendiri pilih Konsumsi internal.',
+            'Tambah produk dan jumlahnya (sachet, renteng, atau dus).',
+            'Konfirmasi. Salah input? Owner Pabrik atau Super Owner bisa void.',
+          ]}
+        />
+        {canCreate ? <Button title="+ Catat penjualan" onPress={() => router.push(`${basePath}/new` as never)} /> : null}
       </View>
       {error && !data ? (
         <View style={styles.header}>
@@ -30,7 +40,17 @@ export function DistributionListScreen({ basePath }: { basePath: string }) {
           keyExtractor={(r) => r.id}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />}
-          ListEmptyComponent={<Text style={styles.empty}>{isPending ? 'Memuat…' : 'Belum ada distribusi.'}</Text>}
+          ListEmptyComponent={
+            isPending ? (
+              <Text style={styles.empty}>Memuat…</Text>
+            ) : (
+              <EmptyState
+                icon="send-outline"
+                title="Belum ada penjualan"
+                text={canCreate ? 'Tekan + Catat penjualan untuk mencatat penjualan pertama.' : undefined}
+              />
+            )
+          }
           renderItem={({ item }) => (
             <Pressable
               accessibilityRole="button"

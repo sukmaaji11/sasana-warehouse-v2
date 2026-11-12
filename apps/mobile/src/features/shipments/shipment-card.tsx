@@ -33,7 +33,7 @@ export function ShipmentCard({ s, onPress }: { s: ShipmentRow; onPress: () => vo
 
 const styles = StyleSheet.create({
   pill: { borderRadius: radius.lg, paddingHorizontal: spacing.sm, paddingVertical: 2 },
-  pillText: { fontSize: 12, fontWeight: '700' },
+  pillText: { fontSize: 11, fontWeight: '700' },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.lg,

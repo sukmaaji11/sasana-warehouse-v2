@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
+import { EmptyState, InfoTip } from '@/components/ui/info-tip';
 import { useMyContext } from '@/features/auth/use-my-context';
 import { colors, font, radius, spacing } from '@/theme';
 import { productionPermissions, useProductions } from './queries';
@@ -13,9 +14,19 @@ export function ProductionListScreen({ basePath }: { basePath: string }) {
   const can = me ? productionPermissions(me) : null;
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
+    <SafeAreaView style={styles.safe} edges={['left', 'right']}>
       <View style={styles.header}>
         <Text style={styles.title}>Produksi</Text>
+        <InfoTip
+          title="Apa itu produksi?"
+          summary="Catat hasil produksi harian. Kemasan berkurang sebanyak good + reject, produk jadi bertambah sebanyak good."
+          steps={[
+            'Pilih produk (hanya produk yang dibuat di pabrik Anda).',
+            'Isi jumlah good (sachet, renteng, atau dus) dan reject (sachet).',
+            'Cek kemasan yang akan terpakai, lalu konfirmasi.',
+            'Salah input? Owner Pabrik bisa melakukan void.',
+          ]}
+        />
         {can?.create ? <Button title="+ Input produksi" onPress={() => router.push(`${basePath}/new` as never)} /> : null}
       </View>
       {error && !data ? (
@@ -29,7 +40,17 @@ export function ProductionListScreen({ basePath }: { basePath: string }) {
           keyExtractor={(r) => r.id}
           contentContainerStyle={styles.list}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />}
-          ListEmptyComponent={<Text style={styles.empty}>{isPending ? 'Memuat…' : 'Belum ada produksi.'}</Text>}
+          ListEmptyComponent={
+            isPending ? (
+              <Text style={styles.empty}>Memuat…</Text>
+            ) : (
+              <EmptyState
+                icon="cogs"
+                title="Belum ada produksi"
+                text={can?.create ? 'Tekan + Input produksi untuk mencatat hasil produksi pertama.' : undefined}
+              />
+            )
+          }
           renderItem={({ item }) => (
             <Pressable
               accessibilityRole="button"

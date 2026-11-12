@@ -11,8 +11,18 @@ export const ITEM_TYPES = ['PACKAGING', 'FINISHED_GOOD'] as const;
 export type ItemType = (typeof ITEM_TYPES)[number];
 
 export const ITEM_TYPE_LABELS: Record<ItemType, string> = {
-  PACKAGING: 'Packaging',
+  PACKAGING: 'Kemasan',
   FINISHED_GOOD: 'Produk Jadi',
 };
 
 export const DEFAULT_MIN_STOCK = 100;
+
+/**
+ * Jenis barang yang boleh dikirim lewat shipment menurut tipe lokasi asal.
+ * Sama dengan app.assert_shipment_item_types di database.
+ */
+export const SHIPPABLE_ITEM_TYPES: Record<LocationType, readonly ItemType[]> = {
+  WAREHOUSE: ['PACKAGING'],
+  FACTORY: ['PACKAGING', 'FINISHED_GOOD'],
+  SALES_WAREHOUSE: ['FINISHED_GOOD'],
+};

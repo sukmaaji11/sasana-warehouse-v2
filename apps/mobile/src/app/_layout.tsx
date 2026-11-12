@@ -2,9 +2,10 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AnimatedSplash } from '@/components/animated-splash';
 import { ConnectionBanner } from '@/components/connection-banner';
 import { Button } from '@/components/ui/button';
 import { SessionProvider, useSession } from '@/features/auth/session-provider';
@@ -16,14 +17,22 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   useEffect(() => setupQueryEnvironment(), []);
+  const [appReady, setAppReady] = useState(false);
+  const [splash, setSplash] = useState(true);
+  const finishSplash = useCallback(() => setSplash(false), []);
+  const markReady = useCallback(() => setAppReady(true), []);
 
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <StatusBar style="dark" />
+          <StatusBar style={splash ? 'light' : 'dark'} />
           <ConnectionBanner />
-          <RootNavigator />
+          <RootNavigator onReady={markReady} />
+          {splash ? (
+            // Splash native disembunyikan begitu splash beranimasi tampil (warna sama → mulus).
+            <AnimatedSplash ready={appReady} onLayout={() => void SplashScreen.hideAsync()} onFinish={finishSplash} />
+          ) : null}
         </SessionProvider>
       </QueryClientProvider>
     </SafeAreaProvider>
@@ -34,7 +43,7 @@ export default function RootLayout() {
  * Navigasi berdasarkan sesi + role. Ini hanya untuk UX:
  * otorisasi data tetap dilakukan RLS/RPC di database.
  */
-function RootNavigator() {
+function RootNavigator({ onReady }: { onReady: () => void }) {
   const { session } = useSession();
   const ctx = useMyContext(Boolean(session));
   const userId = session?.user.id ?? null;
@@ -49,8 +58,8 @@ function RootNavigator() {
   const ready = !loadingSession && !loadingContext;
 
   useEffect(() => {
-    if (ready) SplashScreen.hideAsync();
-  }, [ready]);
+    if (ready) onReady();
+  }, [ready, onReady]);
 
   if (!ready) return null;
 
@@ -79,6 +88,10 @@ function RootNavigator() {
       </Stack.Protected>
       <Stack.Protected guard={Boolean(role)}>
         <Stack.Screen name="index" />
+        <Stack.Screen
+          name="profile"
+          options={{ headerShown: true, title: 'Profil', headerTintColor: colors.primary, headerTitleStyle: { color: colors.text } }}
+        />
       </Stack.Protected>
       <Stack.Protected guard={role === 'DRIVER'}>
         <Stack.Screen name="driver" />

@@ -1,5 +1,5 @@
-import { ShipmentListScreen } from '@/features/shipments/shipment-list-screen';
+import { DriverTasks } from '@/features/home/driver-tasks';
 
 export default function Page() {
-  return <ShipmentListScreen basePath="/driver/tasks" mode="driver-tasks" />;
+  return <DriverTasks />;
 }

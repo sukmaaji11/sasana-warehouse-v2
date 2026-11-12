@@ -24,7 +24,7 @@ export function ProductionList() {
     <div className="flex flex-col gap-4">
       <PageHeader
         title="Produksi"
-        description="Packaging terpakai = good + reject. Produk jadi bertambah sebanyak good."
+        description="Kemasan terpakai = good + reject. Produk jadi bertambah sebanyak good."
         actions={
           can.createProduction(user.role) ? (
             <Button nativeButton={false} render={<Link href="/production/new" />}>

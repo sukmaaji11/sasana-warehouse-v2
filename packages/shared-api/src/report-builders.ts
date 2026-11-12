@@ -95,7 +95,7 @@ export function buildStockReport(levels: Tables<'stock_levels'>[], locationLabel
 // ---------------------------------------------------------------------
 export function buildMutationReport(rows: StockMutationRow[], p: Period, locationLabel: string): ReportDoc {
   return {
-    title: 'Laporan Mutasi Stok',
+    title: 'Laporan Keluar-Masuk Stok',
     meta: [
       `Periode: ${periodLabel(p)}`,
       `Lokasi: ${locationLabel}`,
@@ -150,18 +150,18 @@ export function buildInboundReport(docs: InboundReportDoc[], p: Period): ReportD
     { qty: (x) => x.l.base_qty ?? 0 },
   );
   return {
-    title: 'Laporan Inbound (Penerimaan dari Vendor)',
+    title: 'Laporan Inbound (Kemasan dari Vendor)',
     meta: [`Periode: ${periodLabel(p)}`, `${active.length} dokumen`, VOID_NOTE],
     sections: [
       {
-        heading: 'Ringkasan per packaging',
-        columns: [txt('SKU'), txt('Packaging'), num('Jumlah (sachet)')],
+        heading: 'Ringkasan per kemasan',
+        columns: [txt('SKU'), txt('Kemasan'), num('Jumlah (sachet)')],
         rows: perItem.map((g) => [...g.label, g.v.qty]),
         footer: ['', 'Total', sum(perItem, (g) => g.v.qty)],
       },
       {
         heading: 'Rincian',
-        columns: [txt('Tanggal'), txt('No. dokumen'), txt('Vendor'), txt('SKU'), txt('Packaging'), num('Jumlah'), txt('Satuan')],
+        columns: [txt('Tanggal'), txt('No. dokumen'), txt('Vendor'), txt('SKU'), txt('Kemasan'), num('Jumlah'), txt('Satuan')],
         rows: lines.map(({ d, l }) => [
           formatDate(d.transaction_date),
           d.doc_no,
@@ -188,11 +188,11 @@ export function buildShipmentReport(docs: ShipmentReportDoc[], p: Period, locati
     { n: () => 1 },
   );
   return {
-    title: 'Laporan Shipment',
-    meta: [`Periode dibuat: ${periodLabel(p)}`, `Lokasi: ${locationLabel}`, `${docs.length} shipment`],
+    title: 'Laporan Pengiriman',
+    meta: [`Periode dibuat: ${periodLabel(p)}`, `Lokasi: ${locationLabel}`, `${docs.length} pengiriman`],
     landscape: true,
     sections: [
-      { heading: 'Ringkasan status', columns: [txt('Status'), num('Jumlah shipment')], rows: perStatus.map((g) => [...g.label, g.v.n]) },
+      { heading: 'Ringkasan status', columns: [txt('Status'), num('Jumlah pengiriman')], rows: perStatus.map((g) => [...g.label, g.v.n]) },
       {
         heading: 'Rincian',
         columns: [
@@ -243,13 +243,13 @@ export function buildProductionReport(rows: ProductionReportRow[], p: Period, lo
     sections: [
       {
         heading: 'Ringkasan per pabrik & produk',
-        columns: [txt('Pabrik'), txt('SKU'), txt('Produk'), num('Good'), num('Reject'), num('Packaging terpakai'), txt('% Reject')],
+        columns: [txt('Pabrik'), txt('SKU'), txt('Produk'), num('Good'), num('Reject'), num('Kemasan terpakai'), txt('% Reject')],
         rows: groups.map((g) => [...g.label, g.v.good, g.v.reject, g.v.used, pct(g.v.reject, g.v.used)]),
         footer: ['Total', '', '', tGood, tReject, tUsed, pct(tReject, tUsed)],
       },
       {
         heading: 'Rincian',
-        columns: [txt('Tanggal'), txt('No. dokumen'), txt('Pabrik'), txt('Produk'), num('Good'), num('Reject'), num('Packaging terpakai')],
+        columns: [txt('Tanggal'), txt('No. dokumen'), txt('Pabrik'), txt('Produk'), num('Good'), num('Reject'), num('Kemasan terpakai')],
         rows: rows.map((r) => [
           formatDate(r.production_date),
           r.doc_no,
@@ -282,12 +282,12 @@ export function buildDistributionReport(docs: DistributionReportDoc[], p: Period
     { qty: (x) => x.l.base_qty ?? 0 },
   );
   return {
-    title: 'Laporan Distribusi',
+    title: 'Laporan Penjualan',
     meta: [`Periode: ${periodLabel(p)}`, `Lokasi asal: ${locationLabel}`, `${docs.length} dokumen. Satuan sachet.`, VOID_NOTE],
     sections: [
       {
-        heading: 'Per buyer & produk',
-        columns: [txt('Buyer'), txt('SKU'), txt('Produk'), num('Jumlah (sachet)')],
+        heading: 'Per pembeli & produk',
+        columns: [txt('Pembeli'), txt('SKU'), txt('Produk'), num('Jumlah (sachet)')],
         rows: perBuyer.map((g) => [...g.label, g.v.qty]),
         footer: ['Total', '', '', sum(perBuyer, (g) => g.v.qty)],
       },
@@ -298,7 +298,7 @@ export function buildDistributionReport(docs: DistributionReportDoc[], p: Period
       },
       {
         heading: 'Rincian',
-        columns: [txt('Tanggal'), txt('No. dokumen'), txt('Dari'), txt('Buyer'), txt('Produk'), num('Jumlah'), txt('Input')],
+        columns: [txt('Tanggal'), txt('No. dokumen'), txt('Dari'), txt('Pembeli'), txt('Produk'), num('Jumlah'), txt('Input')],
         rows: lines.map(({ d, l }) => [
           formatDate(d.transaction_date),
           d.doc_no,
@@ -353,7 +353,7 @@ export function buildTraceReport(data: TraceData, itemId: string, itemLabel: str
       at: s.created_at.slice(0, 10),
       row: [
         formatDate(s.created_at.slice(0, 10)),
-        `Shipment (${SHIPMENT_STATUS_LABELS[s.status]})`,
+        `Pengiriman (${SHIPMENT_STATUS_LABELS[s.status]})`,
         s.doc_no,
         s.from_location?.name ?? '',
         s.to_location?.name ?? '',
@@ -362,7 +362,7 @@ export function buildTraceReport(data: TraceData, itemId: string, itemLabel: str
     })),
     ...data.distributions.map((d) => ({
       at: d.transaction_date,
-      row: [formatDate(d.transaction_date), 'Distribusi', d.doc_no, d.location?.name ?? '', d.buyer_name, qtyOf(d.distribution_items)] as Cell[],
+      row: [formatDate(d.transaction_date), 'Penjualan', d.doc_no, d.location?.name ?? '', d.buyer_name, qtyOf(d.distribution_items)] as Cell[],
     })),
   ].sort((a, b) => a.at.localeCompare(b.at));
 
@@ -377,19 +377,19 @@ export function buildTraceReport(data: TraceData, itemId: string, itemLabel: str
         footer: ['Total', sum(prod, (g) => g.v.good), sum(prod, (g) => g.v.reject)],
       },
       {
-        heading: 'Perpindahan antar lokasi (shipment)',
+        heading: 'Pengiriman antar lokasi',
         columns: [txt('Dari'), txt('Ke'), num('Diterima'), num('Dalam perjalanan'), num('Belum pickup')],
         rows: routes.map((g) => [...g.label, g.v.received, g.v.transit, g.v.planned]),
       },
       {
-        heading: 'Keluar ke buyer (distribusi)',
-        columns: [txt('Dari'), txt('Buyer'), num('Jumlah')],
+        heading: 'Terjual ke pembeli',
+        columns: [txt('Dari'), txt('Pembeli'), num('Jumlah')],
         rows: buyers.map((g) => [...g.label, g.v.qty]),
         footer: ['Total', '', sum(buyers, (g) => g.v.qty)],
       },
       {
         heading: 'Kronologi dokumen',
-        columns: [txt('Tanggal'), txt('Kegiatan'), txt('No. dokumen'), txt('Dari / lokasi'), txt('Ke / buyer'), num('Jumlah')],
+        columns: [txt('Tanggal'), txt('Kegiatan'), txt('No. dokumen'), txt('Dari / lokasi'), txt('Ke / pembeli'), num('Jumlah')],
         rows: events.map((e) => e.row),
       },
     ],

@@ -67,8 +67,8 @@ export function ProductionDetailScreen({ id, created }: { id: string; created?: 
         <Row label="Good" value={`${formatQty(data.qty_good ?? 0)} ${data.product?.base_unit ?? ''}`} big />
         {data.factor > 1 ? <Row label="" value={`${formatQty(data.input_qty_good)} ${data.unit_name}`} /> : null}
         <Row label="Reject" value={`${formatQty(data.qty_reject)} ${pkgUnit}`} big />
-        <Row label="Packaging terpakai" value={`${formatQty(data.packaging_consumed ?? 0)} ${pkgUnit}`} />
-        <Row label="Packaging" value={data.packaging?.name ?? '–'} />
+        <Row label="Kemasan terpakai" value={`${formatQty(data.packaging_consumed ?? 0)} ${pkgUnit}`} />
+        <Row label="Kemasan" value={data.packaging?.name ?? '–'} />
       </Card>
       <Card>
         <Row label="Dicatat" value={`${formatDateTime(data.created_at)}${data.creator?.full_name ? `\n${data.creator.full_name}` : ''}`} />
@@ -93,7 +93,7 @@ export function ProductionDetailScreen({ id, created }: { id: string; created?: 
         onConfirm={confirmVoid}
       >
         <Text style={styles.para}>
-          Packaging kembali +{formatQty(data.packaging_consumed ?? 0)} {pkgUnit}, produk jadi −{formatQty(data.qty_good ?? 0)}. Ditolak jika produknya sudah terpakai.
+          Kemasan kembali +{formatQty(data.packaging_consumed ?? 0)} {pkgUnit}, produk jadi −{formatQty(data.qty_good ?? 0)}. Ditolak jika produknya sudah terpakai.
         </Text>
         <TextField label="Alasan" value={reason} onChangeText={setReason} error={reasonError} placeholder="Contoh: salah input jumlah" />
       </ConfirmSheet>

@@ -94,8 +94,8 @@ export function InboundForm() {
                 const item = byId.get(watched?.[idx]?.item_id ?? '');
                 const lineErr = errors.items?.[idx];
                 return (
-                  <div key={field.id} className="grid grid-cols-[1fr_8rem_auto] items-start gap-2">
-                    <div>
+                  <div key={field.id} className="grid grid-cols-[1fr_auto] items-start gap-2 sm:grid-cols-[1fr_8rem_auto]">
+                    <div className="col-span-2 sm:col-span-1">
                       <NativeSelect
                         aria-label={`Barang baris ${idx + 1}`}
                         className="w-full"

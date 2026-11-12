@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createShipment } from '@sasana/shared-api';
-import { formatQty, ITEM_TYPE_LABELS } from '@sasana/shared-constants';
+import { formatQty, ITEM_TYPE_LABELS, SHIPPABLE_ITEM_TYPES } from '@sasana/shared-constants';
 import { shipmentSchema, type ShipmentInput, type ShipmentValues } from '@sasana/shared-validation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeftIcon, PlusIcon, Trash2Icon } from 'lucide-react';
@@ -55,6 +55,9 @@ export function ShipmentForm() {
   const lines = useFieldArray({ control: form.control, name: 'items' });
   const watched = useWatch({ control: form.control });
   const fromId = watched.from_location_id ?? '';
+  // Jenis barang mengikuti lokasi asal (gudang kemasan → kemasan saja, dst.).
+  const fromType = origins.find((l) => l.id === fromId)?.type;
+  const allowedTypes = fromType ? SHIPPABLE_ITEM_TYPES[fromType] : (['PACKAGING', 'FINISHED_GOOD'] as const);
 
   const active = useMemo(() => (items.data ?? []).filter((i) => i.is_active), [items.data]);
   const byId = useMemo(() => new Map(active.map((i) => [i.id, i])), [active]);
@@ -125,6 +128,11 @@ export function ShipmentForm() {
 
             <div className="flex flex-col gap-2">
               <p className="text-sm font-medium">Barang</p>
+              {fromType && fromType !== 'FACTORY' ? (
+                <p className="text-xs text-muted-foreground">
+                  {fromType === 'WAREHOUSE' ? 'Dari gudang kemasan hanya bisa mengirim kemasan.' : 'Dari gudang penjualan hanya bisa mengirim produk jadi.'}
+                </p>
+              ) : null}
               {lines.fields.map((field, idx) => {
                 const line = watched.items?.[idx];
                 const item = byId.get(line?.item_id ?? '');
@@ -134,10 +142,10 @@ export function ShipmentForm() {
                 const err = errors.items?.[idx];
                 return (
                   <div key={field.id} className="flex flex-col gap-1 rounded-md border p-2">
-                    <div className="grid grid-cols-[1fr_7rem_7rem_auto] items-start gap-2">
+                    <div className="grid grid-cols-[1fr_1fr_auto] items-start gap-2 sm:grid-cols-[1fr_7rem_7rem_auto]">
                       <NativeSelect
                         aria-label={`Barang baris ${idx + 1}`}
-                        className="w-full"
+                        className="col-span-3 w-full sm:col-span-1"
                         {...form.register(`items.${idx}.item_id`, {
                           onChange: (e) => {
                             const base = byId.get(e.target.value)?.item_units.find((u) => u.is_base);
@@ -146,7 +154,7 @@ export function ShipmentForm() {
                         })}
                       >
                         <NativeSelectOption value="">— Pilih barang —</NativeSelectOption>
-                        {(['PACKAGING', 'FINISHED_GOOD'] as const).map((t) => (
+                        {allowedTypes.map((t) => (
                           <NativeSelectOptGroup key={t} label={ITEM_TYPE_LABELS[t]}>
                             {active
                               .filter((i) => i.type === t)

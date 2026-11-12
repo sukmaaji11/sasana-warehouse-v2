@@ -85,7 +85,7 @@ export function ProductionFormScreen({ basePath }: { basePath: string }) {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <Screen subtitle="Packaging terpakai = good + reject">
+      <Screen subtitle="Kemasan terpakai = good + reject">
         <Card>
           {factories.length > 1 ? (
             <Controller
@@ -176,7 +176,7 @@ export function ProductionFormScreen({ basePath }: { basePath: string }) {
                 </Text>
               </View>
             ) : (
-              <Text style={styles.error}>Packaging produk ini belum diatur. Hubungi Super Owner.</Text>
+              <Text style={styles.error}>Kemasan produk ini belum diatur. Hubungi Super Owner.</Text>
             )}
           </Card>
         ) : null}

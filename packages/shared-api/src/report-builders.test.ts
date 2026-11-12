@@ -101,7 +101,7 @@ describe('buildTraceReport', () => {
     expect(doc.sections[0]!.footer).toEqual(['Total', 500, 5]);
     expect(doc.sections[1]!.rows).toEqual([['Cilacap', 'Gudang Penjualan', 300, 50, 0]]);
     expect(doc.sections[2]!.rows).toEqual([['Pabrik clp', 'Toko b', 120]]);
-    expect(doc.sections[3]!.rows.map((r) => r[1])).toEqual(['Produksi', 'Distribusi', 'Shipment (Diterima)', 'Shipment (Dalam perjalanan)']);
+    expect(doc.sections[3]!.rows.map((r) => r[1])).toEqual(['Produksi', 'Penjualan', 'Pengiriman (Diterima)', 'Pengiriman (Dalam perjalanan)']);
   });
 });
 
@@ -114,5 +114,20 @@ describe('reportToCsv', () => {
     });
     expect(csv.startsWith('﻿Uji\r\n')).toBe(true);
     expect(csv).toContain('Nama;Qty\r\n"Toko ""Jaya""; Baru";1200\r\n');
+  });
+});
+
+describe('reportToHtml', () => {
+  it('escapes text, formats numbers, and marks numeric columns', async () => {
+    const { reportToHtml } = await import('./report-html');
+    const html = reportToHtml(
+      { title: 'Uji <b>', meta: ['Periode: x'], sections: [{ columns: [{ header: 'Nama' }, { header: 'Qty', numeric: true }], rows: [['Toko & Co', 1200]], footer: ['Total', 1200] }] },
+      'Owner',
+      '12 Nov 2026',
+    );
+    expect(html).toContain('Uji &lt;b&gt;');
+    expect(html).toContain('Toko &amp; Co');
+    expect(html).toContain('<td class="n">1.200</td>');
+    expect(html).toContain('<tfoot>');
   });
 });

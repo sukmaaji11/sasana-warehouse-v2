@@ -97,7 +97,7 @@ export function ProductionForm() {
       <Link href="/production" className="flex items-center gap-1 text-sm text-muted-foreground hover:underline">
         <ArrowLeftIcon className="size-4" /> Produksi
       </Link>
-      <PageHeader title="Input produksi" description="Packaging terpakai = good + reject (1 produk = 1 sachet packaging)." />
+      <PageHeader title="Input produksi" description="Kemasan terpakai = good + reject (1 produk = 1 sachet kemasan)." />
 
       <Card>
         <CardContent>
@@ -176,15 +176,15 @@ export function ProductionForm() {
                 {packaging ? (
                   <div className={`rounded-md border p-3 text-sm ${need > available ? 'border-destructive text-destructive' : ''}`}>
                     <p>
-                      Packaging <span className="font-medium">{packaging.name}</span>: terpakai{' '}
+                      Kemasan <span className="font-medium">{packaging.name}</span>: terpakai{' '}
                       <span className="font-semibold tabular-nums">{formatQty(need)}</span> {packaging.base_unit} (good {formatQty(good)} + reject{' '}
                       {formatQty(reject)}) · stok pabrik <span className="tabular-nums">{formatQty(available)}</span>
                     </p>
-                    {need > available ? <p className="font-medium">Stok packaging tidak cukup.</p> : null}
+                    {need > available ? <p className="font-medium">Stok kemasan tidak cukup.</p> : null}
                   </div>
                 ) : (
                   <Alert variant="destructive">
-                    <AlertDescription>Packaging untuk produk ini belum diatur. Hubungi Super Owner.</AlertDescription>
+                    <AlertDescription>Kemasan untuk produk ini belum diatur. Hubungi Super Owner.</AlertDescription>
                   </Alert>
                 )}
               </>

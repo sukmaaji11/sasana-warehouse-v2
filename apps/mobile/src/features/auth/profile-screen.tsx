@@ -7,13 +7,13 @@ import { colors, font, spacing } from '@/theme';
 import { useMyContext } from './use-my-context';
 import { useConfirmSignOut } from './use-sign-out';
 
-export function ProfileScreen() {
+export function ProfileScreen({ hideTitle = false }: { hideTitle?: boolean }) {
   const { data: user } = useMyContext();
   const signOut = useConfirmSignOut();
   if (!user) return null;
 
   return (
-    <Screen title="Profil">
+    <Screen title={hideTitle ? undefined : 'Profil'}>
       <Card>
         <Row label="Nama" value={user.full_name} />
         <Row label="Username" value={user.username} />

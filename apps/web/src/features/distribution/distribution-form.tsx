@@ -139,10 +139,10 @@ export function DistributionForm() {
                 const err = errors.items?.[idx];
                 return (
                   <div key={field.id} className="flex flex-col gap-1 rounded-md border p-2">
-                    <div className="grid grid-cols-[1fr_7rem_7rem_auto] items-start gap-2">
+                    <div className="grid grid-cols-[1fr_1fr_auto] items-start gap-2 sm:grid-cols-[1fr_7rem_7rem_auto]">
                       <NativeSelect
                         aria-label={`Produk baris ${idx + 1}`}
-                        className="w-full"
+                        className="col-span-3 w-full sm:col-span-1"
                         aria-invalid={Boolean(err?.item_id)}
                         {...form.register(`items.${idx}.item_id`, {
                           onChange: (e) => {

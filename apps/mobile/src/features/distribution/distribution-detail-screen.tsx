@@ -51,7 +51,7 @@ export function DistributionDetailScreen({ id, created }: { id: string; created?
 
       {created && !data.voided_at ? (
         <View style={styles.success}>
-          <Text style={styles.successText}>✓ Distribusi tersimpan. Stok {data.location?.name} sudah berkurang.</Text>
+          <Text style={styles.successText}>✓ Penjualan tersimpan. Stok {data.location?.name} sudah berkurang.</Text>
         </View>
       ) : null}
       {data.voided_at ? (
@@ -84,12 +84,12 @@ export function DistributionDetailScreen({ id, created }: { id: string; created?
       </Card>
 
       {canVoidDistribution(me, data.location_id) && !data.voided_at ? (
-        <Button title="Void distribusi" variant="danger" disabled={!online} onPress={() => setVoiding(true)} />
+        <Button title="Batalkan penjualan (void)" variant="danger" disabled={!online} onPress={() => setVoiding(true)} />
       ) : null}
 
       <ConfirmSheet
         visible={voiding}
-        title="Void distribusi?"
+        title="Batalkan penjualan ini?"
         confirmLabel="Ya, void"
         pending={voidMut.isPending}
         error={voidMut.error}

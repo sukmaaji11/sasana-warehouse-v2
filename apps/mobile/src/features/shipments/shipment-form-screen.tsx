@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createShipment } from '@sasana/shared-api';
-import { formatQty, ITEM_TYPE_LABELS } from '@sasana/shared-constants';
+import { formatQty, ITEM_TYPE_LABELS, SHIPPABLE_ITEM_TYPES } from '@sasana/shared-constants';
 import { shipmentSchema, type ShipmentInput, type ShipmentValues } from '@sasana/shared-validation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
@@ -47,7 +47,12 @@ export function ShipmentFormScreen({ basePath }: { basePath: string }) {
   const watched = useWatch({ control });
   const fromId = watched.from_location_id ?? '';
 
-  const active = useMemo(() => (items.data ?? []).filter((i) => i.is_active), [items.data]);
+  // Jenis barang mengikuti lokasi asal: gudang kemasan → kemasan saja, gudang penjualan → produk jadi saja.
+  const fromType = origins.find((l) => l.id === fromId)?.type;
+  const active = useMemo(() => {
+    const allowed: readonly string[] = fromType ? SHIPPABLE_ITEM_TYPES[fromType] : ['PACKAGING', 'FINISHED_GOOD'];
+    return (items.data ?? []).filter((i) => i.is_active && allowed.includes(i.type));
+  }, [items.data, fromType]);
   const byId = useMemo(() => new Map(active.map((i) => [i.id, i])), [active]);
   const available = (itemId: string) =>
     (stock.data ?? []).find((s) => s.location_id === fromId && s.item_id === itemId)?.quantity ?? 0;
@@ -95,6 +100,11 @@ export function ShipmentFormScreen({ basePath }: { basePath: string }) {
               />
             )}
           />
+          {fromType && fromType !== 'FACTORY' ? (
+            <Text style={styles.hint}>
+              {fromType === 'WAREHOUSE' ? 'Dari gudang kemasan hanya bisa mengirim kemasan.' : 'Dari gudang penjualan hanya bisa mengirim produk jadi.'}
+            </Text>
+          ) : null}
           <Controller
             control={control}
             name="driver_id"
@@ -192,7 +202,7 @@ export function ShipmentFormScreen({ basePath }: { basePath: string }) {
 
       <ConfirmSheet
         visible={confirming !== null}
-        title="Buat shipment?"
+        title="Buat pengiriman?"
         confirmLabel="Ya, buat"
         pending={submit.isPending}
         error={submit.error}

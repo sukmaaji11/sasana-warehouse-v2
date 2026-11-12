@@ -10,3 +10,6 @@ export default function Layout() {
     </Stack>
   );
 }
+
+/** Halaman daftar selalu ada di bawah detail/form → tombol kembali menuju daftar. */
+export const unstable_settings = { anchor: 'index' };
