@@ -506,6 +506,7 @@ Diurutkan dari yang paling berdampak ke stok. Tiap pertanyaan menyebut phase yan
 | Konsumsi internal | Pemakaian produk untuk rawatan ayam dicatat sebagai distribusi | Buyer khusus "Konsumsi internal – Rawatan ayam" di master buyer (Phase 6) |
 | Distribusi pabrik | Admin Pabrik **tidak** boleh input distribusi | Distribusi dari pabrik hanya oleh Owner Pabrik (Phase 6) |
 | Q10 (distribusi) | Super Owner tidak input distribusi, hanya lihat & void. Void distribusi: Super Owner + Owner Pabrik | `create_distribution` (migration `20261116000100`): OP dari pabriknya, AG dari Gudang Penjualan-nya. Void: SO semua, OP hanya distribusi dari pabriknya. AG & AP tidak void. Buyer "Konsumsi internal – Rawatan ayam" dibuat otomatis |
+| Laporan (Phase 7) | Laporan perlu PDF (selain CSV) | Web `/reports`: stok, mutasi stok, inbound, shipment, produksi & reject, distribusi per buyer, lacak produk. Unduh PDF (jsPDF, A4) & CSV (pemisah `;`, untuk Excel Indonesia). Dashboard web & Android dari RPC `get_dashboard`; mutasi dari `report_stock_mutation` (migration `20261117000100`). Void dihitung di kolom transaksi aslinya |
 
 **Asumsi yang saya pakai sampai Anda koreksi:**
 - **Q5:** qty selalu bilangan bulat dalam base unit.

@@ -1,5 +1,5 @@
 import { HomeScreen } from '@/features/auth/home-screen';
 
 export default function Home() {
-  return <HomeScreen upcoming="Ringkasan global seluruh lokasi akan tampil di sini (Phase 7)." />;
+  return <HomeScreen hint="Laporan lengkap (PDF/CSV) tersedia di versi web, menu Laporan." />;
 }

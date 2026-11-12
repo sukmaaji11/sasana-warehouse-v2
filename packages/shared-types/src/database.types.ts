@@ -711,6 +711,9 @@ isOneToOne: false
 "create_stock_adjustment":
 { Args: { "p_adjustment_date": string,"p_idempotency_key": string,"p_items": Json,"p_kind": string,"p_location_id": string,"p_reason": string }; Returns: Json
                            },
+"get_dashboard":
+{ Args: Record<PropertyKey, never>; Returns: Json
+                           },
 "get_my_context":
 { Args: Record<PropertyKey, never>; Returns: Json
                            },
@@ -719,6 +722,11 @@ isOneToOne: false
                            },
 "receive_shipment":
 { Args: { "p_shipment_id": string }; Returns: Json
+                           },
+"report_stock_mutation":
+{ Args: { "p_from": string,"p_location_id"?: string,"p_to": string }; Returns: {
+              "adjusted": number,"base_unit": string,"closing": number,"consumed": number,"distributed": number,"inbound": number,"item_id": string,"item_name": string,"item_type": Database["public"]['Enums']["item_type"],"location_id": string,"location_name": string,"opening": number,"produced": number,"received": number,"shipped": number,"sku": string
+            }[]
                            },
 "void_transaction":
 { Args: { "p_reason": string,"p_ref_id": string,"p_ref_type": string }; Returns: Json

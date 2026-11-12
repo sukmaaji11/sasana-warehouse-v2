@@ -5,7 +5,7 @@ export default function Home() {
   const { data: me } = useMyContext();
   return (
     <HomeScreen
-      upcoming={
+      hint={
         me?.role === 'OWNER_PABRIK'
           ? 'Produksi, distribusi, shipment, dan stok pabrik tersedia di tab bawah.'
           : 'Produksi, shipment masuk, dan stok pabrik tersedia di tab bawah.'

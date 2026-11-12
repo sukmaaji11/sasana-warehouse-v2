@@ -21,4 +21,5 @@ export const can = {
   // Distribusi: OP dari pabrik, AG dari Gudang Penjualan (Q21). SO lihat & void. AP tidak.
   viewDistribution: is('SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_GUDANG'),
   createDistribution: is('OWNER_PABRIK', 'ADMIN_GUDANG'),
+  viewReports: is('SUPER_OWNER', 'ADMIN_GUDANG', 'OWNER_PABRIK', 'ADMIN_PABRIK'),
 };
