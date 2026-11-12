@@ -125,7 +125,7 @@ export async function createAdjustment(client: SasanaClient, idempotencyKey: str
 }
 
 // ---------- Void (SO; produksi juga Owner Pabrik) ----------
-export type VoidableRef = 'inbound' | 'stock_adjustment' | 'production';
+export type VoidableRef = 'inbound' | 'stock_adjustment' | 'production' | 'distribution';
 
 export async function voidTransaction(client: SasanaClient, refType: VoidableRef, refId: string, v: VoidValues): Promise<void> {
   unwrap(await client.rpc('void_transaction', { p_ref_type: refType, p_ref_id: refId, p_reason: v.reason }));

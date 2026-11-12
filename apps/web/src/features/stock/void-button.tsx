@@ -19,6 +19,7 @@ const DETAIL_KEYS: Record<VoidableRef, (id: string) => readonly (readonly unknow
   inbound: (id) => [queryKeys.inbound(id)],
   stock_adjustment: (id) => [queryKeys.adjustment(id)],
   production: (id) => [queryKeys.production(id), queryKeys.productionsAll],
+  distribution: (id) => [queryKeys.distribution(id), queryKeys.distributionsAll],
 };
 
 /** Void (Super Owner; produksi juga Owner Pabrik): membalik seluruh pergerakan stok transaksi. */

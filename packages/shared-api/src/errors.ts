@@ -42,6 +42,10 @@ export function toAppError(error: unknown): AppError {
   if (e.code === 'invalid_credentials' || /invalid login credentials/i.test(message)) {
     return new AppError('INVALID_CREDENTIALS', undefined, error);
   }
+  // .single() tanpa baris: data tidak ada ATAU disembunyikan RLS (bukan lokasi user).
+  if (e.code === 'PGRST116') {
+    return new AppError('NOT_FOUND', 'Data tidak ditemukan atau Anda tidak punya akses ke lokasinya.', error);
+  }
   if (e.code === '42501') return new AppError('FORBIDDEN', undefined, error);
   if (e.code === '23505') return new AppError('DUPLICATE', undefined, error);
   if (e.code === '23514' || e.code === '22P02') return new AppError('VALIDATION', undefined, error);

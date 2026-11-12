@@ -39,18 +39,19 @@ create function pg_temp.qty(p_item uuid, p_loc uuid) returns bigint language sql
   $$ select coalesce((select quantity from public.stocks where item_id = p_item and location_id = p_loc), 0) $$;
 
 -- stok awal: 1.000 sachet PKG-006 di gudang, 2 dus (800) FG-006 di Cilacap (baseline + selisih)
-create temp table b as select pg_temp.qty((select pkg from t), (select hub from t)) as pkg_hub,
+-- Stok yang diuji batasnya diset ABSOLUT oleh fixture (0 + nilai), tidak bergantung isi DB.
+create temp table b as select 0::bigint as pkg_hub,
                               pg_temp.qty((select pkg from t), (select clp from t)) as pkg_clp,
-                              pg_temp.qty((select fg from t), (select clp from t)) as fg_clp,
+                              0::bigint as fg_clp,
                               pg_temp.qty((select fg from t), (select kmj from t)) as fg_kmj;
 grant select on b to authenticated;
 
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000a1"}';
 select lives_ok($$select public.create_stock_adjustment(gen_random_uuid(), 'ADJUSTMENT', (select hub from t), 'fixture', (now() at time zone 'Asia/Jakarta')::date,
-  jsonb_build_array(jsonb_build_object('item_id', (select pkg from t), 'physical_qty', (select pkg_hub from b) + 1000)))$$, 'fixture stok gudang');
+  jsonb_build_array(jsonb_build_object('item_id', (select pkg from t), 'physical_qty', 1000)))$$, 'fixture stok gudang');
 select lives_ok($$select public.create_stock_adjustment(gen_random_uuid(), 'ADJUSTMENT', (select clp from t), 'fixture', (now() at time zone 'Asia/Jakarta')::date,
-  jsonb_build_array(jsonb_build_object('item_id', (select fg from t), 'physical_qty', (select fg_clp from b) + 800)))$$, 'fixture stok pabrik');
+  jsonb_build_array(jsonb_build_object('item_id', (select fg from t), 'physical_qty', 800)))$$, 'fixture stok pabrik');
 reset role;
 
 -- ---------- ADMIN_GUDANG: create (tanpa driver) ----------

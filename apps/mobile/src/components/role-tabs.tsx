@@ -9,6 +9,8 @@ export interface TabDef {
   name: string;
   title: string;
   icon: IconName;
+  /** Sembunyikan tab untuk user ini (route tetap ada, tapi tidak tampil di bar). */
+  hidden?: boolean;
 }
 
 /** Bottom tabs standar untuk tiap role. Tab ditambah per phase. */
@@ -28,6 +30,7 @@ export function RoleTabs({ tabs }: { tabs: readonly TabDef[] }) {
           name={t.name}
           options={{
             title: t.title,
+            href: t.hidden ? null : undefined,
             tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name={t.icon} color={color as string} size={size} />,
           }}
         />

@@ -21,4 +21,7 @@ export const queryKeys = {
   productionsAll: ['production'] as const,
   productions: (filter: object) => ['production', 'list', filter] as const,
   production: (id: string) => ['production', 'detail', id] as const,
+  distributionsAll: ['distribution'] as const,
+  distributions: (filter: object) => ['distribution', 'list', filter] as const,
+  distribution: (id: string) => ['distribution', 'detail', id] as const,
 } as const;

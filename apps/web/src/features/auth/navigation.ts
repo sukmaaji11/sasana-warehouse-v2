@@ -2,6 +2,7 @@ import type { UserRole } from '@sasana/shared-constants';
 import {
   BoxesIcon,
   ClipboardCheckIcon,
+  SendIcon,
   FactoryIcon,
   PackageIcon,
   PackagePlusIcon,
@@ -38,6 +39,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/inbound', label: 'Inbound', icon: PackagePlusIcon, roles: ['SUPER_OWNER', 'ADMIN_GUDANG'], group: 'Operasional' },
   { href: '/shipments', label: 'Shipment', icon: RouteIcon, roles: WEB_ROLES, group: 'Operasional' },
   { href: '/production', label: 'Produksi', icon: FactoryIcon, roles: ['SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_PABRIK'], group: 'Operasional' },
+  { href: '/distribution', label: 'Distribusi', icon: SendIcon, roles: ['SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_GUDANG'], group: 'Operasional' },
   { href: '/stock/adjustments', label: 'Stok awal & penyesuaian', icon: ClipboardCheckIcon, roles: WEB_ROLES, group: 'Operasional' },
   { href: '/master/items', label: 'Barang', icon: BoxesIcon, roles: WEB_ROLES, group: 'Master data' },
   { href: '/master/vendors', label: 'Vendor', icon: TruckIcon, roles: PARTY_ROLES, group: 'Master data' },

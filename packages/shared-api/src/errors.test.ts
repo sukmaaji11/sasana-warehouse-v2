@@ -14,6 +14,11 @@ describe('toAppError', () => {
   it('maps permission denied', () => {
     expect(toAppError({ code: '42501', message: 'permission denied' }).code).toBe('FORBIDDEN');
   });
+  it('maps a hidden/missing single row to NOT_FOUND', () => {
+    const e = toAppError({ code: 'PGRST116', message: 'JSON object requested, multiple (or no) rows returned' });
+    expect(e.code).toBe('NOT_FOUND');
+    expect(e.message).toMatch(/tidak punya akses/);
+  });
   it('maps network failures', () => {
     expect(toAppError(new TypeError('Failed to fetch')).code).toBe('NETWORK');
     expect(toAppError({ name: 'AuthRetryableFetchError', message: '' }).code).toBe('NETWORK');

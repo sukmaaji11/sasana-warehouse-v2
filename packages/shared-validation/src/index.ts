@@ -3,3 +3,4 @@ export * from './master';
 export * from './stock';
 export * from './shipment';
 export * from './production';
+export * from './distribution';

@@ -43,8 +43,9 @@ grant select on t to authenticated;
 create function pg_temp.qty(p_item uuid, p_loc uuid) returns bigint language sql as
   $$ select coalesce((select quantity from public.stocks where item_id = p_item and location_id = p_loc), 0) $$;
 
-create temp table b as select pg_temp.qty((select pkg from t), (select clp from t)) as pkg_clp,
-                              pg_temp.qty((select fg from t), (select clp from t)) as fg_clp,
+-- Stok Cilacap diset ABSOLUT oleh fixture (packaging 1.000, produk 0), tidak bergantung isi DB.
+create temp table b as select 0::bigint as pkg_clp,
+                              0::bigint as fg_clp,
                               pg_temp.qty((select pkg from t), (select hub from t)) as pkg_hub;
 grant select on b to authenticated;
 
@@ -52,7 +53,8 @@ grant select on b to authenticated;
 set local role authenticated;
 set local request.jwt.claims = '{"sub":"00000000-0000-0000-0000-0000000000b1"}';
 select lives_ok($$select public.create_stock_adjustment(gen_random_uuid(), 'ADJUSTMENT', (select clp from t), 'fixture', (select today from t),
-  jsonb_build_array(jsonb_build_object('item_id', (select pkg from t), 'physical_qty', (select pkg_clp from b) + 1000)))$$, 'fixture packaging pabrik');
+  jsonb_build_array(jsonb_build_object('item_id', (select pkg from t), 'physical_qty', 1000),
+                    jsonb_build_object('item_id', (select fg from t), 'physical_qty', 0)))$$, 'fixture packaging pabrik');
 select lives_ok($$select public.create_stock_adjustment(gen_random_uuid(), 'ADJUSTMENT', (select hub from t), 'fixture', (select today from t),
   jsonb_build_array(jsonb_build_object('item_id', (select pkg from t), 'physical_qty', (select pkg_hub from b) + 100)))$$, 'fixture packaging gudang');
 

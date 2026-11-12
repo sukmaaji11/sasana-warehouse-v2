@@ -6,6 +6,7 @@ export default function Layout() {
       tabs={[
         { name: 'index', title: 'Beranda', icon: 'view-dashboard' },
         { name: 'production', title: 'Produksi', icon: 'cogs' },
+        { name: 'distribution', title: 'Distribusi', icon: 'send' },
         { name: 'shipments', title: 'Shipment', icon: 'truck-fast' },
         { name: 'stock', title: 'Stok', icon: 'package-variant-closed' },
         { name: 'profile', title: 'Profil', icon: 'account-circle' },

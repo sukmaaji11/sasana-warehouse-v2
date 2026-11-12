@@ -18,4 +18,7 @@ export const can = {
   viewProduction: is('SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_PABRIK'),
   createProduction: is('OWNER_PABRIK', 'ADMIN_PABRIK'),
   voidProduction: is('SUPER_OWNER', 'OWNER_PABRIK'),
+  // Distribusi: OP dari pabrik, AG dari Gudang Penjualan (Q21). SO lihat & void. AP tidak.
+  viewDistribution: is('SUPER_OWNER', 'OWNER_PABRIK', 'ADMIN_GUDANG'),
+  createDistribution: is('OWNER_PABRIK', 'ADMIN_GUDANG'),
 };

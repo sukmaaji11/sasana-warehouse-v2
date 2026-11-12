@@ -7,3 +7,4 @@ export * from './stock';
 export * from './shipment';
 export * from './context-query';
 export * from './production';
+export * from './distribution';

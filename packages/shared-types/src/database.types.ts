@@ -57,6 +57,76 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"distribution_items": {
+                  Row: {
+                    "base_qty": number | null,"distribution_id": string,"factor": number,"id": string,"input_qty": number,"item_id": string,"unit_id": string,"unit_name": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "base_qty"?: never,"distribution_id": string,"factor": number,"id"?: string,"input_qty": number,"item_id": string,"unit_id": string,"unit_name": string
+                  }
+                  Update: {
+                    "base_qty"?: never,"distribution_id"?: string,"factor"?: number,"id"?: string,"input_qty"?: number,"item_id"?: string,"unit_id"?: string,"unit_name"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "distribution_items_distribution_id_fkey"
+      columns: ["distribution_id"]
+isOneToOne: false
+      referencedRelation: "distributions"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "distribution_items_item_id_fkey"
+      columns: ["item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "distribution_items_unit_id_fkey"
+      columns: ["unit_id"]
+isOneToOne: false
+      referencedRelation: "item_units"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"distributions": {
+                  Row: {
+                    "buyer_id": string,"buyer_name": string,"created_at": string,"created_by": string,"doc_no": string,"id": string,"idempotency_key": string,"location_id": string,"notes": string | null,"transaction_date": string,"void_reason": string | null,"voided_at": string | null,"voided_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "buyer_id": string,"buyer_name": string,"created_at"?: string,"created_by": string,"doc_no": string,"id"?: string,"idempotency_key": string,"location_id": string,"notes"?: string | null,"transaction_date": string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Update: {
+                    "buyer_id"?: string,"buyer_name"?: string,"created_at"?: string,"created_by"?: string,"doc_no"?: string,"id"?: string,"idempotency_key"?: string,"location_id"?: string,"notes"?: string | null,"transaction_date"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "distributions_buyer_id_fkey"
+      columns: ["buyer_id"]
+isOneToOne: false
+      referencedRelation: "buyers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "distributions_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "distributions_location_id_fkey"
+      columns: ["location_id"]
+isOneToOne: false
+      referencedRelation: "locations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "distributions_voided_by_fkey"
+      columns: ["voided_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"doc_counters": {
                   Row: {
                     "last_no": number,"period": string,"prefix": string
@@ -625,6 +695,9 @@ isOneToOne: false
                            },
 "cancel_shipment":
 { Args: { "p_reason": string,"p_shipment_id": string }; Returns: Json
+                           },
+"create_distribution":
+{ Args: { "p_buyer_id": string,"p_idempotency_key": string,"p_items": Json,"p_location_id": string,"p_notes": string,"p_transaction_date": string }; Returns: Json
                            },
 "create_inbound":
 { Args: { "p_idempotency_key": string,"p_items": Json,"p_notes": string,"p_transaction_date": string,"p_vendor_id": string }; Returns: Json
